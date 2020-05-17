@@ -9,7 +9,7 @@ class WordPressPlusLaravelServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('wordpress-plus-laravel', function ($app) {
-            return new Todo;
+            return new WordPressPlusLaravel;
         });
     }
 
