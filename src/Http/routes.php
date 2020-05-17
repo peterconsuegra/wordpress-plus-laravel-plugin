@@ -1,3 +1,3 @@
 <?php
 
-Route::get('todo/list', 'Amitav\Todo\Http\TodoController@getUserTodoList');
+Route::get('todo/list', 'Pete\WordPressPlusLaravel\Http\TodoController@getUserTodoList');
