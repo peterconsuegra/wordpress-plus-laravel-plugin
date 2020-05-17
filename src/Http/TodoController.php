@@ -12,6 +12,6 @@ class TodoController extends Controller
     public function getUserTodoList()
     {
 		$todos = Todo::orderBy('created_at')->get();
-        return view("todo::todo-list")->with('todos',$todos);
+        return view("wordpress-plus-laravel-plugin::todo-list")->with('todos',$todos);
     }
 }
