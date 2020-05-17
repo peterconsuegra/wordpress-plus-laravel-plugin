@@ -1,16 +1,16 @@
 {
-    "name": "amitav/todo",
-    "description": "A small Todo App",
+    "name": "peteconsuegra/wordpress-plus-laravel-plugin",
+    "description": "A WordPress Plus Laravel plugin for WordPress Pete",
     "license": "MIT",
     "authors": [
         {
-            "name": "Amitav Roy",
-            "email": "reachme@amitavroy.com"
+            "name": "Pedro Consuegra",
+            "email": "pedroconsuegrat@gmail.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Amitav\\Todo\\": "src/"
+            "Pete\\WordPressPlusLaravel\\": "src/"
         }
     },
     "minimum-stability": "dev",
@@ -20,7 +20,7 @@
 	"extra": {
 	    "laravel": {
 	        "providers": [
-	            "Amitav\\Todo\\TodoServiceProvider"
+	            "Pete\\WordPressPlusLaravel\\WordPressPlusLaravelServiceProvider"
 	        ]
 	    }
 	}

@@ -1,8 +1,10 @@
 <?php
 
-namespace Amitav\Todo\Http;
 
-use Amitav\Todo\Todo;
+namespace Pete\WordPressPlusLaravel\Http;
+
+use Pete\WordPressPlusLaravel\Todo;
+
 use App\Http\Controllers\Controller;
 
 class TodoController extends Controller

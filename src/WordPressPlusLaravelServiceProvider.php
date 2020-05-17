@@ -1,10 +1,10 @@
 <?php
 
-namespace Amitav\Todo;
+namespace Pete\WordPressPlusLaravel;
 
 use Illuminate\Support\ServiceProvider;
 
-class WordPressLaravelServiceProvider extends ServiceProvider
+class WordPressPlusLaravelServiceProvider extends ServiceProvider
 {
     public function register()
     {

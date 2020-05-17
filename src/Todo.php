@@ -1,6 +1,6 @@
 <?php
 
-namespace Amitav\Todo;
+namespace Pete\WordPressPlusLaravel;
 
 use Illuminate\Database\Eloquent\Model;
 
