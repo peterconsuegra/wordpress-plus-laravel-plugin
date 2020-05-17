@@ -13,7 +13,7 @@
 @section('content')
 @include('error')
 	
-<form action="{{ route('sites.store') }}" id ="SiteForm" method="POST" enctype="multipart/form-data">
+<form action="/wordpress_plus_laravel/store" id ="SiteForm" method="POST" enctype="multipart/form-data">
 
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">						 
 		
