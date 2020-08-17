@@ -3,6 +3,15 @@
 @section('header')
 
 	
+@endsection
+
+@section('content')
+
+
+		<div class="row">
+	            
+	        <div class="col-md-12">
+	
 	@if (count($errors) > 0)
 	    <div class="alert alert-danger">
 	        <strong>Whoops! Something went wrong!</strong>
@@ -15,6 +24,10 @@
 	        </ul>
 	    </div>
 	@endif
+	
+	 </div>
+	 
+	  </div>
 	
 	
 
@@ -31,23 +44,16 @@
 		
 		 <div class="col-md-8">
 			 <br /><br />
-				 <a style="margin-top: 120px" class="btnpete" href="/wordpress_plus_laravel/create"><i class="glyphicon glyphicon-plus"></i> Create WordPress Plus Laravel Integration</a>
+				 <a style="margin-top: 120px" class="btnpete" href="/wordpress_plus_laravel/create"><i class="glyphicon glyphicon-plus"></i> Create WordPress + Laravel</a>
 			<br /><br /><br />
 			 
 		</div>
 		
 		</div>
-		
-
-@endsection
-
-@section('content')
-
-
-	@include('sites/_table_header')
 	
     <div class="row">
         <div class="col-md-12">
+			
 			<div class="content table-responsive">
             @if($sites->count())
                 <table style="padding-left: 10px; padding-right: 10px;" class="table table-hover table-striped">

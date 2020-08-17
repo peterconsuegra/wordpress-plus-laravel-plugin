@@ -1,12 +1,7 @@
 @extends('layout')
 
 @section('header')
-<div class="page-header">
-	<h4>Create WordPress Plus Laravel Integration</h4>
-	
-	<div id="loading_area"></div>
-	
-</div>
+
 	
 @endsection
 
@@ -19,6 +14,13 @@
 		
 	<div class="row">
 		<div class="col-md-12">
+			
+			<div class="page-header">
+				<h4>Create WordPress Plus Laravel Integration</h4>
+	
+				<div id="loading_area"></div>
+	
+			</div>
 									
 							
 			<select class="form-control" id="action_name-field" name="action_name">
