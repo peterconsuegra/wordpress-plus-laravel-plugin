@@ -33,16 +33,16 @@
 
 		<div class="row">
 	            
-	        <div class="col-md-4">
+	        <div class="col-md-6">
     
         	
             		<img alt="w00t!" src="/pete.png" style="height: 204px">
 			
-					<p style="font-size: 13px; ">WordPress efficiency starts here.wiwiwwi</p>
+					<p style="font-size: 13px; ">Get the best of both worlds by integrating WordPress with Laravel.</p>
 		
 			</div>
 		
-		 <div class="col-md-8">
+		 <div class="col-md-6">
 			 <br /><br />
 				 <a style="margin-top: 120px" class="btnpete" href="/wordpress_plus_laravel/create"><i class="glyphicon glyphicon-plus"></i> Create WordPress + Laravel</a>
 			<br /><br /><br />
