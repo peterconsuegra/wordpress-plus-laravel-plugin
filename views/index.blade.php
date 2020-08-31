@@ -38,7 +38,7 @@
         	
             		<img alt="w00t!" src="/pete.png" style="height: 204px">
 			
-					<p style="font-size: 13px; ">WordPress efficiency starts here.</p>
+					<p style="font-size: 13px; ">WordPress efficiency starts here.wiwiwwi</p>
 		
 			</div>
 		
