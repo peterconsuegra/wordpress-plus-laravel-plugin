@@ -51,7 +51,7 @@ class WordPressPlusLaravelController extends Controller
 		$site = new Site();
 		$site->output = "";
 		$site->user_id = $user->id;
-		$site->app_name = $request->input("app_name");
+		$site->app_name = "WordPress + Laravel";
 		$site->action_name = $request->input("action_name");
 		$site->to_clone_project_id = $request->input("to_clone_project_id");
 		$site->name = $request->input("name");

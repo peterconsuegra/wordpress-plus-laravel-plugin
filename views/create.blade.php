@@ -16,7 +16,7 @@
 		<div class="col-md-12">
 			
 			<div class="page-header">
-				<h4>Create WordPress Plus Laravel Integration</h4>
+				<h4>Create WordPress + Laravel</h4>
 	
 				<div id="loading_area"></div>
 	
