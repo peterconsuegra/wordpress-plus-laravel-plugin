@@ -35,7 +35,7 @@ class WordPressPlusLaravelController extends Controller
 	{
 		$user = Auth::user();
 		$viewsw = "/wordpress_plus_laravel";
-		$sites = $user->my_sites()->where("app_name","WordPressPlusLaravel")->paginate(10);
+		$sites = $user->my_sites()->where("app_name","WordPressPlusLaravel")->orWhere('app_name', 'WordPress + Laravel')->paginate(10);
 		
 		$success = Input::get('success');
 		$site_id = Input::get('site_id');
