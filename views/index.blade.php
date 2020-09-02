@@ -44,7 +44,7 @@
 		
 		 <div class="col-md-6">
 			 <br /><br />
-				 <a style="margin-top: 120px" class="btnpete" href="/wordpress_plus_laravel/create"><i class="glyphicon glyphicon-plus"></i> Create WordPress + Laravel</a>
+				 <a style="margin-top: 120px" class="btnpete" href="/wordpress_plus_laravel/create"><i class="glyphicon glyphicon-plus"></i> Create WordPress+Laravel</a>
 			<br /><br /><br />
 			 
 		</div>
