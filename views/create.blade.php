@@ -97,9 +97,10 @@
 			<div class="form-group" id="wordpress_laravel_git" style="display: none;">
 				<p>Git URL.</p>
 			<ul>
-				<li>Please take into account that WordPress Plus Laravel is only available for Laravel 5.5+</li>
-				<li>If you are going to import a repository that starts with https:// please make sure it's public</li>
-				<li>if you are going to import a repository that starts with @git please make sure you have added the ssh keys of your machine to the repository account</li>
+				<li>WordPress+Laravel is only available for Laravel 5.5+</li>
+				<li>To import a repository that starts with https:// please make sure it's public (Recommended).</li>
+				<li>To import a repository that starts with @git make sure you have added the ssh keys of your machine to the repository account.</li>
+				<li>For more information check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</a></li>
 			</ul>
 				<input type="text" id="wordpress_laravel_git-field" name="wordpress_laravel_git" class="form-control" />
                    
