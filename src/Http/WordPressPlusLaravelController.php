@@ -13,9 +13,19 @@ use Illuminate\Http\Request;
 use App\PeteOption;
 use Validator;
 use Illuminate\Support\Facades\Redirect;
+use View;
 
 class WordPressPlusLaravelController extends Controller
 {
+	
+	public function __construct(Request $request){
+	        
+	       	$this->middleware('auth');
+			$input = $request->all();
+			$dashboard_url = env("DASHBOARD_URL");
+			$viewsw = "/wordpress_plus_laravel";
+			View::share(compact('dashboard_url','viewsw'));	
+	 }
   	
 	public function create(){
 		
@@ -26,20 +36,19 @@ class WordPressPlusLaravelController extends Controller
         	return redirect('sites/create')->withErrors("The PHP version must be >= 7.1 to activate WordPress Plus Laravel functionality.");
 		}
 		
-		$viewsw = "/wordpress_plus_laravel";
-		return view("wordpress-plus-laravel-plugin::create")->with('viewsw',$viewsw);
+		return view("wordpress-plus-laravel-plugin::create");
 	}
 	
 	
 	public function index()
 	{
 		$user = Auth::user();
-		$viewsw = "/wordpress_plus_laravel";
+	
 		$sites = $user->my_sites()->where("app_name","WordPressPlusLaravel")->orWhere('app_name', 'WordPress+Laravel')->paginate(10);
 		
 		$success = Input::get('success');
 		$site_id = Input::get('site_id');
-		return view('wordpress-plus-laravel-plugin::index', compact('sites','success','site_id','viewsw'));
+		return view('wordpress-plus-laravel-plugin::index', compact('sites','success','site_id'));
 	}
 	
 	public function store(Request $request)
