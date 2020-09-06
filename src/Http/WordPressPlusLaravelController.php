@@ -13,9 +13,32 @@ use Illuminate\Http\Request;
 use App\PeteOption;
 use Validator;
 use Illuminate\Support\Facades\Redirect;
+use View;
+use Log;
 
 class WordPressPlusLaravelController extends Controller
 {
+	
+	public function __construct(Request $request){
+	    
+	    $this->middleware('auth');
+		$dashboard_url = env("DASHBOARD_URL");
+		$viewsw = "/wordpress_plus_laravel";
+		
+		//DEBUGING PARAMS
+		$debug = env('DEBUG');
+		if($debug == "active"){
+			$inputs = $request->all();
+			Log::info($inputs);
+		}
+		
+		$system_vars = parent::__construct();
+		$pete_options = $system_vars["pete_options"];
+		$sidebar_options = $system_vars["sidebar_options"];
+		$current_user = Auth::user(); 
+		View::share(compact('dashboard_url','viewsw','pete_options','system_vars','sidebar_options','current_user'));
+		   
+	}
   	
 	public function create(){
 		
