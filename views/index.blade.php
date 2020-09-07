@@ -80,7 +80,7 @@
                     <td>{{$site->action_name}}</td>
 					<td>{{$site->app_name}}
 					
-						@if($site->app_name == "WordPressPlusLaravel")
+						@if($site->app_name == "WordPress+Laravel")
 							@if($site->action_name == "New")
 							<br />
 							Laravel version: {{$site->laravel_version}}
@@ -90,26 +90,7 @@
 					</td>
 					
                                 <td class="text-right">
-                                   
-                                   <a class="option_button" role="group" href="{{ route('sites.edit', $site->id) }}"> Options</a>
-								   
-								   @if(($pete_options->get_meta_value('snapshots') == "on") & ($site->app_name == "WordPress"))
-								   
-								    <a class="option_button create_snapshot" site_id="{{$site->id}}" href="#">Create Snapshot</a>
-									
-								   @endif
-								    
-									@if($site->app_name != "WordPressPlusLaravel")
-								    <a class="option_button" href="/sites/export?id={{$site->id}}">Export</a>
-									
-									@if(!$site->suspend)
-									<a class="option_button" href="/sites/suspend?id={{$site->id}}">Suspend</a>
-									@else
-									<a class="option_button" href="/sites/site_continue?id={{$site->id}}">Continue</a>
-									@endif
-									
-									@endif
-									
+                                  	
                                     <form action="{{ route('sites.destroy', $site->id) }}" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
