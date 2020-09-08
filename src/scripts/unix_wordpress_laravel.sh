@@ -1,12 +1,13 @@
 #!/bin/bash
 
-while getopts p:r:m:a:b:g:u:j:v:n:l:e:s:t:w:c:o:k:q:y:i: option 
+while getopts p:r:m:z:a:b:g:u:j:v:n:l:e:s:t:w:c:o:k:q:y:i: option 
 do 
 case "${option}" 
 	in 
 	p) db_root_pass=${OPTARG};;
 	r) route=${OPTARG};;
-	m) mysqlcommand=${OPTARG};;
+	m) logs_route=${OPTARG};;
+	z) os_distribution=${OPTARG};;
 	a) server_conf=${OPTARG};;
 	b) wordpress_laravel_git_branch=${OPTARG};;
 	g) wordpress_laravel_git=${OPTARG};;
@@ -33,7 +34,8 @@ if test "$debug" = 'active'; then
 
 echo "db_root_pass: $db_root_pass"
 echo "app_root: $route" 
-echo "mysqlcommand: $mysqlcommand"
+echo "logs_route: $logs_route"
+echo "os_distribution: $os_distribution"
 echo "server_conf: $server_conf"
 echo "wordpress_laravel_git_branch: $wordpress_laravel_git_branch"
 echo "wordpress_laravel_git: $wordpress_laravel_git"
@@ -88,9 +90,6 @@ DB_PASSWORD=$pdb
 WP_LOAD_PATH=$wp_load_path
 WP_URL=http://$wp_url" > $route/$project_name/.env
 	
-
-	username=`id -un`
-    logs_route=/Users/$username/wwwlog
 	mkdir $logs_route/$project_name
 	touch $logs_route/$project_name/error.log
 	touch $logs_route/$project_name/access.log
@@ -118,6 +117,10 @@ WP_URL=http://$wp_url" > $route/$project_name/.env
 find $route/$project_name -type f -exec chmod 644 {} \;    
 find $route/$project_name -type d -exec chmod 755 {} \;
 chmod -R ug+rwx storage $route/$project_name/bootstrap/cache
+
+if test "$os_distribution" = 'ubuntu'; then
+	cd /etc/apache2/sites-enabled && ln -s /etc/apache2/sites-available/$project_name.conf $project_name.conf
+fi
 
 fi
 
