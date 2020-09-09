@@ -24,7 +24,7 @@ class WordPressPlusLaravelServiceProvider extends ServiceProvider
 		//define files which are going to publish
 		//$this->publishes([__DIR__.'/migrations/2020_05_000000_create_todo_table.php' => base_path('database/migrations/2020_05_000000_create_to_table.php')]);
 		
-		$this->publishes([__DIR__.'/scripts/unix_wordpress_laravel.sh' => base_path('scripts/unix_wordpress_laravel.sh')]);
+		//$this->publishes([__DIR__.'/scripts/unix_wordpress_laravel.sh' => base_path('scripts/unix_wordpress_laravel.sh')]);
 		
     }
 }
