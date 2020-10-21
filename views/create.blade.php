@@ -48,6 +48,22 @@
 					<option value="5.6">5.6</option>
 					<option value="5.7">5.7</option>
 					<option value="5.8">5.8</option>
+					<option value="6.0">6.0</option>
+					<option value="6.2">6.2</option>
+					<option value="6.4">6.4</option>
+					<option value="6.5">6.5</option>
+					<option value="6.12">6.12</option>
+					<option value="6.18">6.18</option>
+					<option value="7.0">7.0</option>
+					<option value="7.3">7.3</option>
+					<option value="7.6">7.6</option>
+					<option value="7.12">7.12</option>
+					<option value="7.25">7.25</option>
+					<option value="7.28">7.28</option>
+					<option value="8.0">8.0</option>
+					<option value="8.1">8.1</option>
+					<option value="8.2">8.2</option>
+					
 				</select>	
 				
                    
