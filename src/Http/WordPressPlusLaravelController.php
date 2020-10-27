@@ -48,7 +48,7 @@ class WordPressPlusLaravelController extends Controller
 		$float_version = (float)$num;
 		
 		if($float_version < 7.1){
-        	return redirect('sites/create')->withErrors("The PHP version must be >= 7.1 to activate WordPress Plus Laravel functionality.");
+        	return redirect('sites/create')->withErrors("The PHP version must be >= 7.1 to activate WordPress+Laravel functionality.");
 		}
 		
 		$viewsw = "/wordpress_plus_laravel";
@@ -86,6 +86,9 @@ class WordPressPlusLaravelController extends Controller
 		$user = Auth::user();
 		$fields_to_validator = $request->all();
 		
+		Log::info("ACTION NAME:");
+		Log::info($request->input("action_name"));
+		
 		$site = new Site();
 		$site->output = "";
 		$site->user_id = $user->id;
@@ -103,14 +106,22 @@ class WordPressPlusLaravelController extends Controller
 	  	$site->wordpress_laravel_git_branch = $request->input("wordpress_laravel_git_branch");
 	  	$site->wordpress_laravel_git = $request->input("wordpress_laravel_git");
 		$site->wordpress_laravel_name = $request->input("wordpress_laravel_name");
-	  		
+			
+		$target_site = Site::findOrFail($site->wordpress_laravel_target_id);
+		$site->wordpress_laravel_url = $site->wordpress_laravel_name . '.' . $target_site->url;
+		$site->url = $site->wordpress_laravel_url;	
+	  	$fields_to_validator["url"] = $site->url;
+		
 		if($site->action_name == "new_wordpress_laravel"){
+			
+			//CHECK PHP VERSIONS
+			//$php_version = floatval(phpversion());
 			
 	    	$validator = Validator::make($fields_to_validator, [
 		   	 'name' =>  array('required', 'regex:/^[a-zA-Z0-9-_]+$/','unique:sites'),
 			 'wordpress_laravel_name' =>  array('required'),
 			 "wordpress_laravel_target" =>  array('required'),
-			 
+			 'url' => 'required|unique:sites'
 	    	 ]);
 			 
 		}else if($site->action_name == "import_wordpress_laravel"){
@@ -121,6 +132,7 @@ class WordPressPlusLaravelController extends Controller
 			 'wordpress_laravel_git_branch' =>  array('required'),
 			 'wordpress_laravel_name' =>  array('required'),
 			  "wordpress_laravel_target" =>  array('required'),
+			  'url' => 'required|unique:sites'
 	    	 ]);
 		
 		}
@@ -128,7 +140,7 @@ class WordPressPlusLaravelController extends Controller
      	if ($validator->fails()) {
 			
 			if(($site->action_name == "new_wordpress_laravel") || ($site->action_name == "import_wordpress_laravel")){
-	        	return redirect('sites/wordpress_plus_laravel')
+	        	return redirect('/wordpress_plus_laravel')
 	        		->withErrors($validator)
 	        			->withInput();
 			}

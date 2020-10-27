@@ -18,7 +18,10 @@
 			<div class="page-header">
 				<h4>Create WordPress+Laravel</h4>
 	
-				<div id="loading_area"></div>
+				<ul>
+					<li>Check that the php version is compatible with the Laravel version you want to integrate with your WordPress.</li>
+					<li>You can upgrade the php version of your WordPress Pete, check the installation guide for your operating system: <a href="https://wordpresspete.com/wordpresspete-mac-osx-installation/" target="_blank">MacOS</a> <a href="https://wordpresspete.com/wordpresspete-linux-installation/" target="_blank">Linux</a></li>
+				</ul>
 	
 			</div>
 									
@@ -230,86 +233,8 @@
 			
 			console.log(app);
 			console.log(action);
-			if((app == "Wordpress") || (app == "Drupal")){
-				
-				if(action=="new_wordpress_laravel"){
-					$("#name_div").show();
-					$("#url_div").show();	
-					$("#massive_form").html("");
-				}
-				else if (action=="Clone") {
-				  
-					if(app == "Wordpress"){
-  				  
-  				 
-						$.ajax({
-							url: "/sites/get_sites",
-							type: "get",
-							datatype: 'json',
-							data: { app_name: "Wordpress"},
-							success: function(data){
-								$("#loading_area").html('');
-								console.log(data);
-								select_aux = "<p>Project to clone</p>" ;
-								select_aux += '<select id="to_clone_project-field" name="to_clone_project" class = "form-control">';	
-							
-								var arrayLength = data.length;
-								for (var i = 0; i < arrayLength; i++) {	
-									select_aux +='<option value="'+data[i].name+'">'+data[i].url+'</option>';
-								}
-							
-								select_aux +='</select><br/>';
-								$("#name_div").show();
-								$("#url_div").show();
-								$("#project_to_clone").show();
-								$("#project_to_clone").html(select_aux);
-								$("#massive_form").show();
-							}
-						
-						});
-					}else if(app == "Drupal"){
-				
- 				    
-						$.ajax({
-							url: "/sites/get_sites",
-							type: "get",
-							datatype: 'json',
-							data: { app_name: "Drupal"},
-							success: function(data){
-								$("#loading_area").html('');
-								console.log(data);
-								select_aux = "" ;
-								select_aux = "<label for='to_clone_project-field'>Project to clone</label>" ;
-								select_aux += '<select id="to_clone_project-field" name="to_clone_project" class = "form-control">';
- 							
-								var arrayLength = data.length;
-								for (var i = 0; i < arrayLength; i++) {	
-									select_aux +='<option value="'+data[i].name+'">'+data[i].url+'</option>';
-								}
-							
-								select_aux +='</select><br/>';
-								$("#project_to_clone").html(select_aux);
-								$("#name_div").show();
-								$("#url_div").show();
-								$("#massive_form").show();
-							}
-						});	
-				  
-					}		
-								 
-				}else if (action=="Import") {
-					$("#name_div").show();
-					$("#url_div").show();
-					$("#zip_file_url_div").show();
-					$("#big_file").show();
-					$("#big_file_container").show();
-				  
-				}
-				
-			}
 			
-			
-  			 
+				
 				if(action=="new_wordpress_laravel"){
 				  
 					$("#loading_area").html('<div id="loading_div"></div>');
@@ -395,8 +320,7 @@
 					
 					
 				}
-			
-		}
+			}
 	}
 	
 	
@@ -430,43 +354,19 @@
 				  
 	}
 				
-			
-				
-	var createsw = false;
-	 
-	jQuery( document ).ready(function( $ ) {
-
-		//$("#SiteForm").validate();
-	 
-	});
-	  
 	  
 	$("#create_button").click(function() {
-	  	  
-		//Aditional javascript validations for import action
-		   
+	  
 		app_name = $("#app_name-field").val();
 		action_name = $("#action_name-field").val();
-		  
-		//Import CMS case
-		if(((app_name == "Wordpress") || (app_name == "Drupal")) & (action_name == "Import")){
-		  	  
-			console.log("validations CMS");
-			console.log($("#import_from_git_checkbox").is(":checked"));
-			console.log($('input[type=file]').val());
-			  
-			if(($('input[type=file]').val() == "") & ($("#big_file_route").val() == "")){
-				alert("Please select a pete .tar.gz file")
-				return false
-			}
-
-			//Import wordpress+laravel case
-		}else if((app_name == "Wordpress+laravel") & ((action_name == "Import") || (action_name == "Clone"))){
-			console.log("Validations wordpress+laravel");
-			console.log($('input[type=file]').val());
-			 
-						 
-		}
+		
+		$('<input>').attr({
+		    type: 'hidden',
+		    id: 'action_name',
+		    name: 'action_name',
+			value: action_name
+		}).appendTo('SiteForm');
+		
 	});
 				  
 				  

@@ -48,6 +48,15 @@
                      
                 </div>
 				
+				@if($site->app_name=="WordPress+Laravel")
+				
+	                <div class="form-group">
+	                     <p>Check the built-in examples: <a href="http://{{$site->url}}/wordpress_plus_laravel_examples" target="_blank">{{$site->url}}/wordpress_plus_laravel_examples</a></p>
+                     
+	                </div>
+				
+				@endif
+				
                 
 				
             </form>
