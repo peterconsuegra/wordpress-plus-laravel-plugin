@@ -21,6 +21,7 @@
 				<ul>
 					<li>Check that the php version is compatible with the Laravel version you want to integrate with your WordPress.</li>
 					<li>You can upgrade the php version of your WordPress Pete, check the installation guide for your operating system: <a href="https://wordpresspete.com/wordpresspete-mac-osx-installation/" target="_blank">MacOS</a> <a href="https://wordpresspete.com/wordpresspete-linux-installation/" target="_blank">Linux</a></li>
+					<li>For more information check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</a></li>
 				</ul>
 	
 			</div>
@@ -107,7 +108,7 @@
 				<li>WordPress+Laravel is only available for Laravel 5.5+</li>
 				<li>To import a repository that starts with https:// please make sure it's public (Recommended).</li>
 				<li>To import a repository that starts with @git make sure you have added the ssh keys of your machine to the repository account.</li>
-				<li>For more information check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</a></li>
+				
 			</ul>
 				<input type="text" id="wordpress_laravel_git-field" name="wordpress_laravel_git" class="form-control" />
                    
