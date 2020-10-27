@@ -50,6 +50,18 @@
 		</div>
 		
 		</div>
+		
+	<div class="row">
+				
+	<div class="col-md-12">
+						
+		<a class="table_tab <?php if($tab_index == "index") echo 'index_selected'; ?>" href="/wordpress_plus_laravel">WordPress+Laravel</a>
+						
+	    <a class="table_tab <?php if($tab_index == "trash") echo 'index_selected'; ?>" href="/wordpress_plus_laravel/trash">Trash</a>
+						
+	</div>
+				
+	</div>
 	
     <div class="row">
         <div class="col-md-12">
@@ -91,8 +103,9 @@
 					
                                 <td class="text-right">
                                   	
-                                    <form action="{{ route('sites.destroy', $site->id) }}" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
-                                        <input type="hidden" name="_method" value="DELETE">
+                                    <form action="/wordpress_plus_laravel/destroy" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+										
+                                        <input type="hidden" name="site_id" value="{{$site->id}}">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="option_button" style="background-color: #f1592a; width: 100%">Delete</button>
                                     </form>

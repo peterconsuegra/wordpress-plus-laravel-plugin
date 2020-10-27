@@ -36,7 +36,9 @@ class WordPressPlusLaravelController extends Controller
 		$pete_options = $system_vars["pete_options"];
 		$sidebar_options = $system_vars["sidebar_options"];
 		$current_user = Auth::user(); 
-		View::share(compact('dashboard_url','viewsw','pete_options','system_vars','sidebar_options','current_user'));
+		$os_distribution = $system_vars["os_distribution"];
+		
+		View::share(compact('dashboard_url','viewsw','pete_options','system_vars','sidebar_options','current_user','os_distribution'));
 		   
 	}
   	
@@ -58,11 +60,24 @@ class WordPressPlusLaravelController extends Controller
 	{
 		$user = Auth::user();
 		$viewsw = "/wordpress_plus_laravel";
-		$sites = $user->my_sites()->where("app_name","WordPressPlusLaravel")->orWhere('app_name', 'WordPress+Laravel')->whereNull('deleted_at')->paginate(10);
+		$sites = $user->my_sites()->where("app_name","WordPress+Laravel")->orWhere("app_name","WordPressPlusLaravel")->whereNull('deleted_at')->paginate(10);
+		$tab_index = "index";
 		
 		$success = Input::get('success');
 		$site_id = Input::get('site_id');
-		return view('wordpress-plus-laravel-plugin::index', compact('sites','success','site_id','viewsw'));
+		return view('wordpress-plus-laravel-plugin::index', compact('sites','success','site_id','viewsw','tab_index'));
+	}
+	
+	public function trash(){
+		
+		$user = Auth::user();
+		$sites = $user->my_trash_sites()->where("app_name","WordPress+Laravel")->orWhere("app_name","WordPressPlusLaravel")->whereNotNull('deleted_at')->paginate(10);
+		$viewsw = "/wordpress_plus_laravel";
+		$tab_index = "trash";
+		$success = Input::get('success');
+		$site_id = Input::get('site_id');
+		
+		return view('wordpress-plus-laravel-plugin::trash', compact('sites','success','site_id','viewsw','tab_index'));
 	}
 	
 	public function store(Request $request)
@@ -132,6 +147,39 @@ class WordPressPlusLaravelController extends Controller
 		$success = Input::get('success');
 		return view('wordpress-plus-laravel-plugin::edit', compact('site','success','viewsw'));
 	}
+	
+	
+	public function destroy(Request $request)
+	{
+		$user = Auth::user();
+		$site = Site::findOrFail($request->input("site_id"));
+		
+		if(($user->id == $site->user_id) || ($user->admin == true)){
+			$site->delete_wordpress();
+			$site->delete();
+			$debug = env('DEBUG');
+			if($debug == "active"){
+				Log::info('Ouput deleteDebug' . $site->output);
+			}
+			
+		}
+		
+		return Redirect::to('/wordpress_plus_laravel?success=true');
+	}
+	
+    public function force_delete(Request $request){
+	   
+	    $user = Auth::user();
+ 		$site = Site::onlyTrashed()->findOrFail($request->input("site_id"));	
+ 		$site->force_delete_wordpress();
+ 		
+		if(($user->id == $site->user_id) || ($user->admin == true)){
+			$site->forceDelete();
+		}
+		
+ 		return Redirect::to('wordpress_plus_laravel/trash');
+	
+    }
 	
 	
 	
