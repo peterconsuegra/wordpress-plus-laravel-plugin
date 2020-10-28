@@ -35,10 +35,12 @@
 	            
 	        <div class="col-md-6">
     
-        	
+        	<div class="pete_container">
             		<img alt="w00t!" src="/pete.png" style="height: 204px">
 			
 					<p style="font-size: 13px; ">Get the best of both worlds by integrating WordPress with Laravel.</p>
+					
+			</div>
 		
 			</div>
 		

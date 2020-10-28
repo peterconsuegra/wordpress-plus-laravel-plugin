@@ -9,6 +9,8 @@ Route::get('wordpress_plus_laravel', 'Pete\WordPressPlusLaravel\Http\WordPressPl
 
 Route::get('wordpress_plus_laravel/trash', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@trash');
 
+Route::get('wordpress_plus_laravel/restore', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@restore');
+
 Route::get('/wordpress_plus_laravel/{id}/edit', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@edit');
 
 Route::post('/wordpress_plus_laravel/force_delete', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@force_delete');
