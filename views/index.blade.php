@@ -111,7 +111,7 @@
 										
                                         <input type="hidden" name="site_id" value="{{$site->id}}">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="option_button" style="background-color: #f1592a; width: 100%">Delete</button>
+                                        <button type="submit" class="option_button" style="background-color: #f1592a; width: 100%" id="delete_{{$site->name}}" >Delete</button>
                                     </form>
                                 </td>
                             </tr>
