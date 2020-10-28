@@ -16,7 +16,7 @@
 		<div class="col-md-12">
 			
 			<div class="page-header">
-				<h4>Create WordPress+Laravel</h4>
+				<h3>Create WordPress+Laravel Instance</h3>
 	
 				<ul>
 					<li>Check that the php version is compatible with the Laravel version you want to integrate with your WordPress.</li>

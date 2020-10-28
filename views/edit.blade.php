@@ -12,6 +12,8 @@
     <div class="row">
         <div class="col-md-12">
 			
+			
+			
 			@if(isset($error))
 			
 				<div class="alert alert-danger">
@@ -32,6 +34,10 @@
 			
             <form action="#">
                 
+				 <div class="page-header">
+				 <h3>Options</h3>
+				</div>
+				
                 <div class="form-group">
            
 					<p>Id: {{$site->id}}</p>
@@ -57,6 +63,10 @@
 				
 				@endif
 				
+				<div class="form-group">
+				<p>For more information check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</p>
+				
+				</div>
                 
 				
             </form>

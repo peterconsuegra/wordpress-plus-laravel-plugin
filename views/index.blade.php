@@ -44,7 +44,7 @@
 		
 		 <div class="col-md-6">
 			 <br /><br />
-				 <a style="margin-top: 120px" class="btnpete" href="/wordpress_plus_laravel/create"><i class="glyphicon glyphicon-plus"></i> Create WordPress+Laravel</a>
+				 <a style="margin-top: 120px" class="btnpete" href="/wordpress_plus_laravel/create"><i class="glyphicon glyphicon-plus"></i> Create WordPress+Laravel Instance</a>
 			<br /><br /><br />
 			 
 		</div>
@@ -103,6 +103,8 @@
 					
                                 <td class="text-right">
                                   	
+									 <a class="option_button" role="group" href="/wordpress_plus_laravel/{{$site->id}}/edit"> Options</a>
+									 
                                     <form action="/wordpress_plus_laravel/destroy" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
 										
                                         <input type="hidden" name="site_id" value="{{$site->id}}">
