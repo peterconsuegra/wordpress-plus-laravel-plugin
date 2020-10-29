@@ -43,12 +43,9 @@
 					<p>Id: {{$site->id}}</p>
                 </div>
 				
+                
                 <div class="form-group">
-                   <p>Website: {{$site->name}}</p>
-                </div>
-				
-                <div class="form-group">
-                     <p>Url:
+                     <p>URL:
 					
 					 <a href="http://{{$site->url}}" target="_blank">{{$site->url}}</a></p>
                      
@@ -64,7 +61,7 @@
 				@endif
 				
 				<div class="form-group">
-				<p>For more information check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</p>
+				<p>For more information check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</a></p>
 				
 				</div>
                 

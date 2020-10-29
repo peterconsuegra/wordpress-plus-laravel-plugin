@@ -52,7 +52,7 @@ class WordPressPlusLaravelController extends Controller
 		}
 		
 		$viewsw = "/wordpress_plus_laravel";
-		return view("wordpress-plus-laravel-plugin::create")->with('viewsw',$viewsw);
+		return view("wordpress-plus-laravel-plugin::create",compact('float_version','viewsw'));
 	}
 	
 	

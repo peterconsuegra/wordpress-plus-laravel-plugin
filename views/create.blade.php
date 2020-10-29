@@ -19,9 +19,10 @@
 				<h3>Create WordPress+Laravel Instance</h3>
 	
 				<ul>
-					<li>Check that the php version is compatible with the Laravel version you want to integrate with your WordPress.</li>
-					<li>You can upgrade the php version of your WordPress Pete, check the installation guide for your operating system: <a href="https://wordpresspete.com/wordpresspete-mac-osx-installation/" target="_blank">MacOS</a> <a href="https://wordpresspete.com/wordpresspete-linux-installation/" target="_blank">Linux</a></li>
-					<li>For more information check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</a></li>
+					<li>Current PHP version: {{$float_version}}</li>
+					<li>Check that the current version of PHP is compatible with the version of Laravel you want to integrate</li>
+					<li>You can upgrade the PHP version of your WordPress Pete, check the installation guide for your operating system: <a href="https://wordpresspete.com/wordpresspete-mac-osx-installation/" target="_blank">MacOS</a> <a href="https://wordpresspete.com/wordpresspete-linux-installation/" target="_blank">Linux</a></li>
+					<li>For more information about how you can integrate WordPress with Laravel check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</a></li>
 				</ul>
 	
 			</div>
