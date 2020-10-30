@@ -22,11 +22,11 @@ class WordPressPlusLaravelController extends Controller
 	public function __construct(Request $request){
 	    
 	    $this->middleware('auth');
-		$dashboard_url = env("DASHBOARD_URL");
+		$dashboard_url = env("PETE_DASHBOARD_URL");
 		$viewsw = "/wordpress_plus_laravel";
 		
 		//DEBUGING PARAMS
-		$debug = env('DEBUG');
+		$debug = env('PETE_DEBUG');
 		if($debug == "active"){
 			$inputs = $request->all();
 			Log::info($inputs);
@@ -169,7 +169,7 @@ class WordPressPlusLaravelController extends Controller
 		if(($user->id == $site->user_id) || ($user->admin == true)){
 			$site->delete_wordpress();
 			$site->delete();
-			$debug = env('DEBUG');
+			$debug = env('PETE_DEBUG');
 			if($debug == "active"){
 				Log::info('Ouput deleteDebug' . $site->output);
 			}
