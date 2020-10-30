@@ -8,13 +8,13 @@ use Pete\WordPressPlusLaravel\Todo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Site;
-use Input;
 use Illuminate\Http\Request;
 use App\PeteOption;
 use Validator;
 use Illuminate\Support\Facades\Redirect;
 use View;
 use Log;
+use Illuminate\Support\Facades\Input;
 
 class WordPressPlusLaravelController extends Controller
 {
@@ -35,10 +35,9 @@ class WordPressPlusLaravelController extends Controller
 		$system_vars = parent::__construct();
 		$pete_options = $system_vars["pete_options"];
 		$sidebar_options = $system_vars["sidebar_options"];
-		$current_user = Auth::user(); 
 		$os_distribution = $system_vars["os_distribution"];
 		
-		View::share(compact('dashboard_url','viewsw','pete_options','system_vars','sidebar_options','current_user','os_distribution'));
+		View::share(compact('dashboard_url','viewsw','pete_options','system_vars','sidebar_options','os_distribution'));
 		   
 	}
   	
@@ -50,9 +49,9 @@ class WordPressPlusLaravelController extends Controller
 		if($float_version < 7.1){
         	return redirect('sites/create')->withErrors("The PHP version must be >= 7.1 to activate WordPress+Laravel functionality.");
 		}
-		
+		$current_user = Auth::user(); 
 		$viewsw = "/wordpress_plus_laravel";
-		return view("wordpress-plus-laravel-plugin::create",compact('float_version','viewsw'));
+		return view("wordpress-plus-laravel-plugin::create",compact('float_version','viewsw','current_user'));
 	}
 	
 	
@@ -62,10 +61,10 @@ class WordPressPlusLaravelController extends Controller
 		$viewsw = "/wordpress_plus_laravel";
 		$sites = $user->my_sites()->where("app_name","WordPress+Laravel")->orWhere("app_name","WordPressPlusLaravel")->whereNull('deleted_at')->paginate(10);
 		$tab_index = "index";
-		
+		$current_user = Auth::user(); 
 		$success = Input::get('success');
 		$site_id = Input::get('site_id');
-		return view('wordpress-plus-laravel-plugin::index', compact('sites','success','site_id','viewsw','tab_index'));
+		return view('wordpress-plus-laravel-plugin::index', compact('sites','success','site_id','viewsw','tab_index','current_user'));
 	}
 	
 	public function trash(){
@@ -76,8 +75,8 @@ class WordPressPlusLaravelController extends Controller
 		$tab_index = "trash";
 		$success = Input::get('success');
 		$site_id = Input::get('site_id');
-		
-		return view('wordpress-plus-laravel-plugin::trash', compact('sites','success','site_id','viewsw','tab_index'));
+		$current_user = Auth::user(); 
+		return view('wordpress-plus-laravel-plugin::trash', compact('sites','success','site_id','viewsw','tab_index','current_user'));
 	}
 	
 	public function store(Request $request)
@@ -157,7 +156,8 @@ class WordPressPlusLaravelController extends Controller
 		$viewsw = "/wordpress_plus_laravel";
 		$site = Site::findOrFail($id);
 		$success = Input::get('success');
-		return view('wordpress-plus-laravel-plugin::edit', compact('site','success','viewsw'));
+		$current_user = Auth::user(); 
+		return view('wordpress-plus-laravel-plugin::edit', compact('site','success','viewsw','current_user'));
 	}
 	
 	

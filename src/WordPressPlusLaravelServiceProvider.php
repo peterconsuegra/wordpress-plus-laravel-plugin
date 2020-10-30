@@ -7,19 +7,28 @@ use Illuminate\Support\ServiceProvider;
 class WordPressPlusLaravelServiceProvider extends ServiceProvider
 {
     public function register()
-    {
-        $this->app->bind('wordpress-plus-laravel', function ($app) {
+    {	
+        $this->app->singleton('wordpress-plus-laravel', function ($app) {
             return new WordPressPlusLaravel;
-        });
+        });	
     }
 
     public function boot()
     {
         // loading the routes file
-        require __DIR__ . '/Http/routes.php';
+        //require __DIR__ . '/Http/routes.php';
 		
 		//define the path for the view files
-		$this->loadViewsFrom(__DIR__.'/../views','wordpress-plus-laravel-plugin');
+		//$this->loadViewsFrom(__DIR__.'/../views','wordpress-plus-laravel-plugin');
+		
+		$this->loadRoutesFrom(__DIR__.'/routes/web.php');
+		$this->loadViewsFrom(__DIR__.'/views', 'wordpress-plus-laravel-plugin');
+		
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+				Console\AdaptWordPressPlusLaravel::class,
+            ]);
+        }
 		
 		//define files which are going to publish
 		//$this->publishes([__DIR__.'/migrations/2020_05_000000_create_todo_table.php' => base_path('database/migrations/2020_05_000000_create_to_table.php')]);
