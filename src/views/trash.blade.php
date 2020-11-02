@@ -68,7 +68,7 @@
 			
 			<div class="content table-responsive">
 				
-            @if($sites->count())
+            @if(isset($sites))
                 <table style="padding-left: 10px; padding-right: 10px;" class="table table-hover table-striped">
                     <thead>
                         <tr>
@@ -116,7 +116,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {!! $sites->render() !!}
+               
             @else
                 <h3 class="text-center alert alert-info">Empty!</h3>
             @endif

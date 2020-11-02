@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Redirect;
 use View;
 use Log;
 use Illuminate\Support\Facades\Input;
+use DB;
 
 class WordPressPlusLaravelController extends Controller
 {
@@ -59,7 +60,9 @@ class WordPressPlusLaravelController extends Controller
 	{
 		$user = Auth::user();
 		$viewsw = "/wordpress_plus_laravel";
-		$sites = $user->my_sites()->where("app_name","WordPress+Laravel")->orWhere("app_name","WordPressPlusLaravel")->whereNull('deleted_at')->paginate(10);
+		
+		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NULL");
+		
 		$tab_index = "index";
 		$current_user = Auth::user(); 
 		$success = Input::get('success');
@@ -70,7 +73,7 @@ class WordPressPlusLaravelController extends Controller
 	public function trash(){
 		
 		$user = Auth::user();
-		$sites = $user->my_trash_sites()->where("app_name","WordPress+Laravel")->orWhere("app_name","WordPressPlusLaravel")->whereNotNull('deleted_at')->paginate(10);
+		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NOT NULL");
 		$viewsw = "/wordpress_plus_laravel";
 		$tab_index = "trash";
 		$success = Input::get('success');
