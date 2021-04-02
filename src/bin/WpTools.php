@@ -38,8 +38,8 @@ class WpTools{
 		$db_name = env('DB_DATABASE');
 		$db_user_pass = env('DB_PASSWORD');
 		$db_user = env('DB_USERNAME');
-		
-		$conn=mysqli_connect("localhost",$db_user,$db_user_pass,$db_name);
+		$db_host = env('DB_HOST');
+		$conn=mysqli_connect($db_host,$db_user,$db_user_pass,$db_name);
 		// Check connection
 		if (mysqli_connect_errno()){
 		  Log::info("Failed to connect to MySQL: " . mysqli_connect_error());
@@ -57,8 +57,9 @@ class WpTools{
 		$db_name = env('DB_DATABASE');
 		$db_user_pass = env('DB_PASSWORD');
 		$db_user = env('DB_USERNAME');
+		$db_host = env('DB_HOST');
 		
-		$conn=mysqli_connect("localhost",$db_user,$db_user_pass,$db_name);
+		$conn=mysqli_connect($db_host,$db_user,$db_user_pass,$db_name);
 		// Check connection
 		if (mysqli_connect_errno()){
 		  Log::info("Failed to connect to MySQL: " . mysqli_connect_error());
