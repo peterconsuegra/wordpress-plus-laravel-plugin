@@ -114,6 +114,9 @@ class WordPressPlusLaravelController extends Controller
 		$site->url = $site->wordpress_laravel_url;	
 	  	$fields_to_validator["url"] = $site->url;
 		
+		$site->url = str_replace("http://","",$site->url);
+		$site->url = str_replace("www.","",$site->url);
+		
 		if($site->action_name == "new_wordpress_laravel"){
 			
 			//CHECK PHP VERSIONS
