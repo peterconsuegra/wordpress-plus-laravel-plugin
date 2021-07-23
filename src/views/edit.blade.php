@@ -10,7 +10,7 @@
 	
 	
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
 			
 			
 			
@@ -69,6 +69,61 @@
             </form>
 
         </div>
+		
+	 <div class="col-md-6">
+		 
+		 @if($pete_options->get_meta_value('ssl_feature') == "on")
+		 
+		 	 <br />
+		 	 <p>Curent status SSL: {{$site->ssl}}</p>
+		
+			 <form action="/sites/delete_ssl" id ="SiteForm" method="POST">
+				 
+				 <input type="hidden" name="site_id" value="{{ $site->id }}">    
+				 <input type="hidden" name="_token" value="{{ csrf_token() }}">          
+ 				 <button type="submit" id="create_button" class="btnpete">Delete SSL</button>
+	    	
+ 			 </form>
+	    
+	 
+			 <h3>SSL Activation File</h3>
+	    	
+			 <form action="/sites/upload_activation_file" id ="SiteForm" method="POST" enctype="multipart/form-data">
+				 <input type="hidden" name="site_id" value="{{ $site->id }}">    
+				 <input type="hidden" name="_token" value="{{ csrf_token() }}">          
+				 <label>Activation File</label>
+				 <input type="file" id="activation_file" name="activation_file">
+				 <br />
+			 
+ 				 <button type="submit" id="create_button" class="btnpete">Upload Activation File</button>
+	    	
+ 			 </form>
+	    	
+			 <h3>Upload SSL</h3>
+	    	
+			 <form action="/sites/upload_ssl" id ="sslform" method="POST" enctype="multipart/form-data">
+			   <input type="hidden" name="site_id" value="{{ $site->id }}">    
+			   <input type="hidden" name="_token" value="{{ csrf_token() }}">          
+			 <label>SSL CRT</label>
+			 <input type="file" id="ssl_crt" name="ssl_crt">
+			 <br />
+	    	
+			 <label>SSL Key</label>
+			 <input type="file" id="ssl_key" name="ssl_key">
+			 <br />
+	    	
+			 <label>SSL Bundle</label>
+			 <input type="file" id="ssl_bundle" name="ssl_bundle">
+			 <br />
+	    	
+			 <button type="submit" id="sslform_button" class="btnpete">Upload SSL</button>
+	    	
+	 		</form>
+			
+		@endif
+	 				 
+	   </div>
+		
     </div>
 	
 	 
