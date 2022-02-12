@@ -61,7 +61,7 @@ class WordPressPlusLaravelController extends Controller
 		$user = Auth::user();
 		$viewsw = "/wordpress_plus_laravel";
 		
-		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NULL");
+		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NULL ORDER BY created_at DESC");
 		
 		$tab_index = "index";
 		$current_user = Auth::user(); 
@@ -96,27 +96,19 @@ class WordPressPlusLaravelController extends Controller
 		$site->user_id = $user->id;
 		$site->app_name = "WordPress+Laravel";
 		$site->action_name = $request->input("action_name");
-		$site->to_clone_project_id = $request->input("to_clone_project_id");
-		$site->name = $request->input("name");
-		$site->to_import_project = $request->input("to_import_project");
 		$site->user_id = $user->id;
-		$site->url = $request->input("url");
-		$site->big_file_route = $request->input("big_file_route");
-		$site->laravel_version = $request->input("selected_version");	
+		$site->laravel_version = $request->input("selected_version");
 		
 		$site->wordpress_laravel_target_id = $request->input("wordpress_laravel_target");
 	  	$site->wordpress_laravel_git_branch = $request->input("wordpress_laravel_git_branch");
 	  	$site->wordpress_laravel_git = $request->input("wordpress_laravel_git");
 		$site->wordpress_laravel_name = $request->input("wordpress_laravel_name");
-			
-		$target_site = Site::findOrFail($site->wordpress_laravel_target_id);
-		$site->wordpress_laravel_url = $site->wordpress_laravel_name . '.' . $target_site->url;
-		$site->url = $site->wordpress_laravel_url;	
+		$site->name = $site->wordpress_laravel_name;
+		
+		$site->set_wordpress_laravel_url($site->wordpress_laravel_target_id);
 	  	$fields_to_validator["url"] = $site->url;
-		
-		$site->url = str_replace("http://","",$site->url);
-		$site->url = str_replace("www.","",$site->url);
-		
+		$fields_to_validator["name"] = $site->name;
+
 		if($site->action_name == "new_wordpress_laravel"){
 			
 			//CHECK PHP VERSIONS
@@ -154,7 +146,7 @@ class WordPressPlusLaravelController extends Controller
 		 $site->wordpress_laravel();
 		
 		return Redirect::to('/wordpress_plus_laravel'.'/'.$site->id .'/edit' .'?success=' . 'true');
-		//return Redirect::to('/wordpress_plus_laravel?success=true');
+		
 	}
 	
 	public function edit($id)
@@ -163,7 +155,16 @@ class WordPressPlusLaravelController extends Controller
 		$site = Site::findOrFail($id);
 		$success = Input::get('success');
 		$current_user = Auth::user(); 
-		return view('wordpress-plus-laravel-plugin::edit', compact('site','success','viewsw','current_user'));
+		
+		$pete_options = new PeteOption();
+	    $app_root = $pete_options->get_meta_value('app_root');
+		
+		$web_server_error_file = "$app_root/wwwlog/$site->name/error.log";
+		$web_server_error_content = @file_get_contents("$app_root/wwwlog/$site->name/error.log");
+		$web_server_access_file = "$app_root/wwwlog/$site->name/access.log";
+		$web_server_access_content = @file_get_contents("$app_root/wwwlog/$site->name/access.log");
+		
+		return view('wordpress-plus-laravel-plugin::edit', compact('site','success','viewsw','current_user','web_server_error_file','web_server_error_content','web_server_access_file','web_server_access_content'));
 	}
 	
 	

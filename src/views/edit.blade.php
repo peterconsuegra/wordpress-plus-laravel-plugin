@@ -61,7 +61,7 @@
 				@endif
 				
 				<div class="form-group">
-				<p>For more information check this <a target="_blank" href="https://wordpresspete.com/2018/11/03/create-a-wordpress-laravel-integration-with-wordpresspete-part-one/">tutorial</a></p>
+				<p>For more information check the  <a target="_blank" href="https://github.com/peterconsuegra/wordpress-pete-docker/wiki">WIKI</a></p>
 				
 				</div>
                 
@@ -74,51 +74,53 @@
 		 
 		 @if($pete_options->get_meta_value('ssl_feature') == "on")
 		 
-		 	 <br />
-		 	 <p>Curent status SSL: {{$site->ssl}}</p>
-		
+			  <br />
+			  <p>Curent status SSL: {{$site->ssl}}</p>
+ 
 			 <form action="/sites/delete_ssl" id ="SiteForm" method="POST">
-				 
-				 <input type="hidden" name="site_id" value="{{ $site->id }}">    
-				 <input type="hidden" name="_token" value="{{ csrf_token() }}">          
- 				 <button type="submit" id="create_button" class="btnpete">Delete SSL</button>
-	    	
- 			 </form>
-	    
 	 
+			 	<input type="hidden" name="site_id" value="{{ $site->id }}">    
+			 	<input type="hidden" name="_token" value="{{ csrf_token() }}">          
+			 	<button type="submit" id="create_button" class="btnpete">Delete SSL</button>
+
+			 </form>
+
+
 			 <h3>SSL Activation File</h3>
-	    	
+
 			 <form action="/sites/upload_activation_file" id ="SiteForm" method="POST" enctype="multipart/form-data">
-				 <input type="hidden" name="site_id" value="{{ $site->id }}">    
-				 <input type="hidden" name="_token" value="{{ csrf_token() }}">          
-				 <label>Activation File</label>
-				 <input type="file" id="activation_file" name="activation_file">
-				 <br />
-			 
- 				 <button type="submit" id="create_button" class="btnpete">Upload Activation File</button>
-	    	
- 			 </form>
-	    	
-			 <h3>Upload SSL</h3>
-	    	
-			 <form action="/sites/upload_ssl" id ="sslform" method="POST" enctype="multipart/form-data">
-			   <input type="hidden" name="site_id" value="{{ $site->id }}">    
-			   <input type="hidden" name="_token" value="{{ csrf_token() }}">          
-			 <label>SSL CRT</label>
-			 <input type="file" id="ssl_crt" name="ssl_crt">
-			 <br />
-	    	
-			 <label>SSL Key</label>
-			 <input type="file" id="ssl_key" name="ssl_key">
-			 <br />
-	    	
-			 <label>SSL Bundle</label>
-			 <input type="file" id="ssl_bundle" name="ssl_bundle">
-			 <br />
-	    	
-			 <button type="submit" id="sslform_button" class="btnpete">Upload SSL</button>
-	    	
-	 		</form>
+	
+			 	<input type="hidden" name="site_id" value="{{ $site->id }}">    
+			 	<input type="hidden" name="_token" value="{{ csrf_token() }}">          
+			 	<label>Activation File</label>
+			 	<input type="file" id="activation_file" name="activation_file">
+			 	<br />
+                         	
+			 	<button type="submit" id="create_button" class="btnpete">Upload Activation File</button>
+
+			 </form>
+ 
+
+			  <h3>Upload SSL</h3>
+
+			  <form action="/sites/upload_ssl" id ="sslform" method="POST" enctype="multipart/form-data">
+			    <input type="hidden" name="site_id" value="{{ $site->id }}">    
+			    <input type="hidden" name="_token" value="{{ csrf_token() }}">          
+			  <label>SSL CRT</label>
+			  <input type="file" id="crt_file" name="crt_file">
+			  <br />
+
+			  <label>SSL Key</label>
+			  <input type="file" id="key_file" name="key_file">
+			  <br />
+
+			  <label>SSL Bundle</label>
+			  <input type="file" id="bundle_file" name="bundle_file">
+			  <br />
+
+			  <button type="submit" id="sslform_button" class="btnpete">Upload SSL</button>
+
+			 </form>
 			
 		@endif
 	 				 
@@ -127,15 +129,43 @@
     </div>
 	
 	 
-     <div class="row">
-         <div class="col-md-12">
-			
-     <div class="form-group">
-          <p>Output: </p>
-          <pre>{{$site->output}}</pre>
-     </div>
+   <div class="row">
+       <div class="col-md-12">
+	 	<p>Terminal output: </p>	
+  	 	<div class="console_area">
+       
+        	  <pre>{{$site->output}}</pre>
+		 
+   	 	</div>
 	 </div>
+ </div>
+ 
+   <div class="row" style="margin-top: 30px">
+       <div class="col-md-12">
+	 	<p>Web server Apache error log: </p>	
+		<i>{{$web_server_error_file}}</i>
+  	 	<div class="console_area">
+       
+        	  <pre>{{$web_server_error_content}}</pre>
+		  
+   	 	</div>
 	 </div>
+ </div>
+ 
+ 
+   <div class="row" style="margin-top: 30px">
+       <div class="col-md-12">
+	 	<p>Web server Apache access log: </p>	
+		<i>{{$web_server_access_file}}</i>
+  	 	<div class="console_area">
+       
+        	  <pre>{{$web_server_access_content}}</pre>
+		  
+   	 	</div>
+	 </div>
+ </div>
+	
+	
     
 
 <script>
