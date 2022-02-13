@@ -84,6 +84,7 @@ class WordPressPlusLaravelController extends Controller
 	
 	public function store(Request $request)
 	{
+		Log::info("wordpressLaravel check0a");
 		$pete_options = new PeteOption();
 		$user = Auth::user();
 		$fields_to_validator = $request->all();
@@ -105,10 +106,16 @@ class WordPressPlusLaravelController extends Controller
 		$site->wordpress_laravel_name = $request->input("wordpress_laravel_name");
 		$site->name = $site->wordpress_laravel_name;
 		
-		$site->set_wordpress_laravel_url($site->wordpress_laravel_target_id);
+		Log::info("wordpressLaravel check0");
+		
+		if(isset($site->wordpress_laravel_target_id))
+		  $site->set_wordpress_laravel_url($site->wordpress_laravel_target_id);
+		
 	  	$fields_to_validator["url"] = $site->url;
 		$fields_to_validator["name"] = $site->name;
-
+		
+		Log::info("wordpressLaravel check1");
+		
 		if($site->action_name == "new_wordpress_laravel"){
 			
 			//CHECK PHP VERSIONS
@@ -118,6 +125,7 @@ class WordPressPlusLaravelController extends Controller
 		   	 'name' =>  array('required', 'regex:/^[a-zA-Z0-9-_]+$/','unique:sites'),
 			 'wordpress_laravel_name' =>  array('required'),
 			 "wordpress_laravel_target" =>  array('required'),
+			 "laravel_version" =>  array('required'),
 			 'url' => 'required|unique:sites'
 	    	 ]);
 			 
@@ -135,9 +143,9 @@ class WordPressPlusLaravelController extends Controller
 		}
 		
      	if ($validator->fails()) {
-			
+			Log::info("wordpressLaravel check3");
 			if(($site->action_name == "new_wordpress_laravel") || ($site->action_name == "import_wordpress_laravel")){
-	        	return redirect('/wordpress_plus_laravel')
+	        	return redirect('/wordpress_plus_laravel/create')
 	        		->withErrors($validator)
 	        			->withInput();
 			}
