@@ -113,6 +113,7 @@ class WordPressPlusLaravelController extends Controller
 		
 	  	$fields_to_validator["url"] = $site->url;
 		$fields_to_validator["name"] = $site->name;
+		$fields_to_validator["laravel_version"] = $site->laravel_version;
 		
 		Log::info("wordpressLaravel check1");
 		
