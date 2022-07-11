@@ -14,7 +14,6 @@ use Validator;
 use Illuminate\Support\Facades\Redirect;
 use View;
 use Log;
-use Illuminate\Support\Facades\Input;
 use DB;
 
 class WordPressPlusLaravelController extends Controller
@@ -42,7 +41,7 @@ class WordPressPlusLaravelController extends Controller
 		   
 	}
   	
-	public function create(){
+	public function create(Request $request){
 		
 		$num = substr(PHP_VERSION, 0, 3);
 		$float_version = (float)$num;
@@ -56,7 +55,7 @@ class WordPressPlusLaravelController extends Controller
 	}
 	
 	
-	public function index()
+	public function index(Request $request)
 	{
 		$user = Auth::user();
 		$viewsw = "/wordpress_plus_laravel";
@@ -65,19 +64,19 @@ class WordPressPlusLaravelController extends Controller
 		
 		$tab_index = "index";
 		$current_user = Auth::user(); 
-		$success = Input::get('success');
-		$site_id = Input::get('site_id');
+		$success = $request->input('success');
+		$site_id = $request->input('site_id');
 		return view('wordpress-plus-laravel-plugin::index', compact('sites','success','site_id','viewsw','tab_index','current_user'));
 	}
 	
-	public function trash(){
+	public function trash(Request $request){
 		
 		$user = Auth::user();
 		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NOT NULL");
 		$viewsw = "/wordpress_plus_laravel";
 		$tab_index = "trash";
-		$success = Input::get('success');
-		$site_id = Input::get('site_id');
+		$success = $request->input('success');
+		$site_id = $request->input('site_id');
 		$current_user = Auth::user(); 
 		return view('wordpress-plus-laravel-plugin::trash', compact('sites','success','site_id','viewsw','tab_index','current_user'));
 	}
@@ -158,11 +157,11 @@ class WordPressPlusLaravelController extends Controller
 		
 	}
 	
-	public function edit($id)
+	public function edit(Request $request,$id)
 	{
 		$viewsw = "/wordpress_plus_laravel";
 		$site = Site::findOrFail($id);
-		$success = Input::get('success');
+		$success = $request->input('success');
 		$current_user = Auth::user(); 
 		
 		$pete_options = new PeteOption();
@@ -210,7 +209,7 @@ class WordPressPlusLaravelController extends Controller
     }
 	
 	public function restore(){
-		$site = Site::withTrashed()->findOrFail(Input::get('id'));
+		$site = Site::withTrashed()->findOrFail($request->input('id'));
 		$site->restore();
 		$site->restore_wordpress();
 		
