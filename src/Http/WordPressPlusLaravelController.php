@@ -208,7 +208,7 @@ class WordPressPlusLaravelController extends Controller
 	
     }
 	
-	public function restore(){
+	public function restore(Request $request){
 		$site = Site::withTrashed()->findOrFail($request->input('id'));
 		$site->restore();
 		$site->restore_wordpress();
