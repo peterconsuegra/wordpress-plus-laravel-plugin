@@ -153,6 +153,7 @@ class WordPressPlusLaravelController extends Controller
 		 
 		 $site->wordpress_laravel();
 		
+		
 		return Redirect::to('/wordpress_plus_laravel'.'/'.$site->id .'/edit' .'?success=' . 'true');
 		
 	}
@@ -208,7 +209,7 @@ class WordPressPlusLaravelController extends Controller
 	
     }
 	
-	public function restore(){
+	public function restore(Request $request){
 		$site = Site::withTrashed()->findOrFail($request->input('id'));
 		$site->restore();
 		$site->restore_wordpress();
