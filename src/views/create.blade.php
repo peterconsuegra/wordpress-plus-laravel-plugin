@@ -30,6 +30,22 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="row">
+		<div class="col-md-6">
+				
+							
+			<select class="form-control" id="integration_type-field" name="integration_type">
+				<option value="">Laravel Integration Type</option>
+				<option value="inside_wordpress">Inside WordPress</option>
+				<option value="separate_subdomain">Separate subdomain</option>
+			</select>
+								
+			<br />
+							
+		</div>
+							
+	</div>
 		
 	<div class="row">
 		<div class="col-md-6">
@@ -79,7 +95,8 @@
 				<ul>
 					<li>WordPress+Laravel is only available for Laravel 5.5+</li>
 					<li>To import a repository that starts with https:// please make sure it's public</li>
-					<li>To import a repository that starts with @git make sure you have added the ssh keys of your machine to the repository account</li>	
+					<li>To import a repository that starts with @git make sure you have added the ssh keys of your machine to the repository account. Go to /ssh/id_rsa.pub and copy and paste to your repository access keys</li>
+						
 				</ul>
 			</div>
 		</div>
@@ -91,7 +108,7 @@
 					
 			<div class="form-group import_git_fields" id="wordpress_laravel_git" style="display: none;">
 			
-				<input type="text" id="wordpress_laravel_git-field" placeholder="Git URL" name="wordpress_laravel_git" class="form-control" />
+				<input type="text" id="wordpress_laravel_git-field" name="wordpress_laravel_git" class="form-control" placeholder="git@github.com:peterconsuegra/example.git" />
                    
 				<div id="wordpress_laravel_git_error_area"> 
 				</div>
