@@ -31,21 +31,7 @@
 		</div>
 	</div>
 	
-	<div class="row">
-		<div class="col-md-6">
-				
-							
-			<select class="form-control" id="integration_type-field" name="integration_type">
-				<option value="">Laravel Integration Type</option>
-				<option value="inside_wordpress">Inside WordPress</option>
-				<option value="separate_subdomain">Separate subdomain</option>
-			</select>
-								
-			<br />
-							
-		</div>
-							
-	</div>
+	
 		
 	<div class="row">
 		<div class="col-md-6">
@@ -54,8 +40,7 @@
 			<select class="form-control" id="action_name-field" name="action_name">
 				<option value="">Select Action</option>
 				<option value="new_wordpress_laravel">New</option>
-				<option value="import_wordpress_laravel">Import</option>
-							
+				<option value="import_wordpress_laravel">Import</option>	
 			</select>
 								
 			<br />
@@ -63,6 +48,8 @@
 		</div>
 							
 	</div>
+	
+	
 	
 	<div class="row">
 		<div class="col-md-6">
@@ -130,13 +117,36 @@
 				
 	</div>    
 	
-				
 	<div class="row">
 		<div class="col-md-6">
 						
+			<div class="form-group integration_type" id="integration_type" style="display: none;">
+			
+			<select class="form-control" id="integration_type-field" name="integration_type">';
+			 <option value="">Laravel Integration Type</option>
+			 <option value="inside_wordpress">Inside WordPress</option>
+			 <option value="separate_subdomain">Separate subdomain</option>
+		 	</select>
+			
+			</div>
+							
+		</div>
+							
+	</div>
+	
+				
+	<div class="row">
+		<div class="col-md-6">
+			
+			
+						
 			<div id="url_div_wordpress_laravel" class="git_fields" style="display: none;">
 				
-				<input type="text" id="wordpress_laravel_name-field" placeholder="Subdomain" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />
+				<div id="integration_param">
+				
+					
+				
+				</div>
 					 
 			</div>
 		
@@ -161,12 +171,25 @@
 	$("#action_name-field").change(function() {
 		form_logic($("#app_name-field").val(),$("#action_name-field").val());
 	});
+	
+	
+	$("#integration_type-field").change(function() {
+		if($(this).val()=="inside_wordpress"){
+			input = '<input type="text" id="wordpress_laravel_name-field" placeholder="WordPress route" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />';
+		}else{
+			input = '<input type="text" id="wordpress_laravel_name-field" placeholder="Subdomain" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />';
+		}
+		$("#integration_param").html(input);
+	});
+	
 				
 	
 	function form_logic(app,action){
 		if((app != 0) && (action != 0)){
 			hide_fields();
+				
 			
+				
 				if(action=="new_wordpress_laravel"){
 				  
 					$("#loading_area").html('<div id="loading_div"></div>');
@@ -178,8 +201,9 @@
 						success: function(data){
 							$("#loading_area").html('');
 							console.log(data);
-							select_aux = '';
-							select_aux += '<select id="wordpress_laravel_target-field" name="wordpress_laravel_target" class = "form-control" >';	
+							
+							
+							select_aux = '<select id="wordpress_laravel_target-field" name="wordpress_laravel_target" class = "form-control" >';	
 							select_aux +='<option value="">Select the WordPress instance to integrate</option>';
 							var arrayLength = data.length;
 							for (var i = 0; i < arrayLength; i++) {	
@@ -191,6 +215,7 @@
 	    				    
 							$(".git_fields").show();	
 							$(".new_git_fields").show();
+							$("#integration_type").show();
 							
 						}
 					
@@ -208,6 +233,9 @@
 						success: function(data){
 							$("#loading_area").html('');
 							console.log(data);
+							
+							
+							
 							select_aux = '<div class="row">';
 							select_aux += '<div class="col-md-12">';
 							select_aux += '<select id="wordpress_laravel_target-field" name="wordpress_laravel_target" class = "form-control" >';	
@@ -224,8 +252,12 @@
 	    				
 							$(".git_fields").show();	
 							$(".import_git_fields").show();	
+							$("#integration_type").show();
+							
 							
 						}
+						
+						
 					
 					});
 					
@@ -240,7 +272,8 @@
 		
 		$(".git_fields").hide();	
 		$(".import_git_fields").hide();	
-		$(".new_git_fields").hide();			  
+		$(".new_git_fields").hide();	
+		$("#integration_type").hide();		  
 	}
 				
 	  

@@ -88,7 +88,9 @@
                                 <td>{{$site->id}}</td>
                      <td>{{$site->name}}</td>           
                     <td>
-					<a href="http://{{$site->url}}" target ='_blank'>{{$site->url}}</a>
+					
+						<a href="http://{{$site->url}}" target ='_blank'>{{$site->url}}</a>
+						
 					</td>
                    
                     <td>{{$site->action_name}}</td>

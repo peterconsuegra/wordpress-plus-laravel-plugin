@@ -41,24 +41,31 @@
                 <div class="form-group">
            
 					<p>Id: {{$site->id}}</p>
+					
+					<p>Integration type: {{$site->integration_type}}</p>
+					
                 </div>
 				
                 
                 <div class="form-group">
-                     <p>URL:
-					
-					 <a href="http://{{$site->url}}" target="_blank">{{$site->url}}</a></p>
+					 
+					 @if($site->integration_type=="separate_subdomain")
+                     	<p>URL: <a href="http://{{$site->wordpress_laravel_url}}" target="_blank">{{$site->wordpress_laravel_url}}</a></p>
+					 @else
+					 	<p>URL: <a href="http://{{$target_site->url}}/{{$site->name}}" target="_blank">{{$target_site->url}}/{{$site->name}}</a></p>
+					 @endif
                      
                 </div>
 				
-				@if($site->app_name=="WordPress+Laravel")
 				
-	                <div class="form-group">
-	                     <p>Check the built-in examples: <a href="http://{{$site->url}}/wordpress_plus_laravel_examples" target="_blank">{{$site->url}}/wordpress_plus_laravel_examples</a></p>
-                     
-	                </div>
+				<div class="form-group">
 				
-				@endif
+					@if($site->integration_type=="separate_subdomain")
+	                 	<p>Check the built-in examples: <a href="http://{{$site->url}}/wordpress_plus_laravel_examples" target="_blank">{{$site->url}}/wordpress_plus_laravel_examples</a></p>
+					 @else
+	                 	<p>Check the built-in examples: <a href="http://{{$target_site->url}}/{{$site->name}}/wordpress_plus_laravel_examples" target="_blank">{{$target_site->url}}/{{$site->name}}/wordpress_plus_laravel_examples</a></p>		
+					 @endif
+				</div>
 				
 				<div class="form-group">
 				<p>For more information check the  <a target="_blank" href="https://github.com/peterconsuegra/wordpress-pete-docker/wiki">WIKI</a></p>

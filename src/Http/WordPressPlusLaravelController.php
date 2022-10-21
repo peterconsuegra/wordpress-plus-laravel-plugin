@@ -60,7 +60,7 @@ class WordPressPlusLaravelController extends Controller
 		$user = Auth::user();
 		$viewsw = "/wordpress_plus_laravel";
 		
-		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NULL ORDER BY created_at DESC");
+		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version, integration_type, wordpress_laravel_url from sites where app_name='WordPress+Laravel' and deleted_at is NULL ORDER BY created_at DESC");
 		
 		$tab_index = "index";
 		$current_user = Auth::user(); 
@@ -104,6 +104,7 @@ class WordPressPlusLaravelController extends Controller
 	  	$site->wordpress_laravel_git = $request->input("wordpress_laravel_git");
 		$site->wordpress_laravel_name = $request->input("wordpress_laravel_name");
 		$site->name = $site->wordpress_laravel_name;
+		$site->integration_type = $request->input("integration_type");
 		
 		Log::info("wordpressLaravel check0");
 		
@@ -124,6 +125,7 @@ class WordPressPlusLaravelController extends Controller
 	    	$validator = Validator::make($fields_to_validator, [
 		   	 'name' =>  array('required', 'regex:/^[a-zA-Z0-9-_]+$/','unique:sites'),
 			 'wordpress_laravel_name' =>  array('required'),
+			 'integration_type' =>  array('required'),
 			 "wordpress_laravel_target" =>  array('required'),
 			 "laravel_version" =>  array('required'),
 			 'url' => 'required|unique:sites'
@@ -134,6 +136,7 @@ class WordPressPlusLaravelController extends Controller
 	    	$validator = Validator::make($fields_to_validator, [
 		   	 'name' =>  array('required', 'regex:/^[a-zA-Z0-9-_]+$/','unique:sites'),
 			 'wordpress_laravel_git' =>  array('required'),
+			 'integration_type' =>  array('required'),
 			 'wordpress_laravel_git_branch' =>  array('required'),
 			 'wordpress_laravel_name' =>  array('required'),
 			  "wordpress_laravel_target" =>  array('required'),
@@ -173,7 +176,9 @@ class WordPressPlusLaravelController extends Controller
 		$web_server_access_file = "$app_root/wwwlog/$site->name/access.log";
 		$web_server_access_content = @file_get_contents("$app_root/wwwlog/$site->name/access.log");
 		
-		return view('wordpress-plus-laravel-plugin::edit', compact('site','success','viewsw','current_user','web_server_error_file','web_server_error_content','web_server_access_file','web_server_access_content'));
+		$target_site = Site::findOrFail($site->wordpress_laravel_target_id);
+		
+		return view('wordpress-plus-laravel-plugin::edit', compact('site','success','viewsw','current_user','web_server_error_file','web_server_error_content','web_server_access_file','web_server_access_content','target_site'));
 	}
 	
 	
