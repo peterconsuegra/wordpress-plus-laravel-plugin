@@ -97,7 +97,7 @@
 					
                                 <td class="text-right">
 
-								    <a class="option_button" href="/wordpress_plus_laravel/restore?id={{$site->id}}"></i>Restore</a>
+								    <a class="option_button" href="/wordpress_plus_laravel/restore?id={{$site->id}}" id="restore_{{$site->name}}"></i>Restore</a>
 
 									@if($current_user->admin)
 									

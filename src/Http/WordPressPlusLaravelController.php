@@ -72,7 +72,7 @@ class WordPressPlusLaravelController extends Controller
 	public function trash(Request $request){
 		
 		$user = Auth::user();
-		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NOT NULL");
+		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NOT NULL ORDER BY created_at DESC");
 		$viewsw = "/wordpress_plus_laravel";
 		$tab_index = "trash";
 		$success = $request->input('success');
@@ -187,8 +187,8 @@ class WordPressPlusLaravelController extends Controller
 		$user = Auth::user();
 		$site = Site::findOrFail($request->input("site_id"));
 		
-		if(($user->id == $site->user_id) || ($user->admin == true)){
-			$site->delete_wordpress();
+		if($user->is_owner_and_admin($site)){
+			$site->delete_wordpress_laravel();
 			$site->delete();
 			$debug = env('PETE_DEBUG');
 			if($debug == "active"){
@@ -204,9 +204,9 @@ class WordPressPlusLaravelController extends Controller
 	   
 	    $user = Auth::user();
  		$site = Site::onlyTrashed()->findOrFail($request->input("site_id"));	
- 		$site->force_delete_wordpress();
  		
-		if(($user->id == $site->user_id) || ($user->admin == true)){
+		if($user->is_owner_and_admin($site)){
+			$site->force_delete_wordpress();
 			$site->forceDelete();
 		}
 		
@@ -217,7 +217,7 @@ class WordPressPlusLaravelController extends Controller
 	public function restore(Request $request){
 		$site = Site::withTrashed()->findOrFail($request->input('id'));
 		$site->restore();
-		$site->restore_wordpress();
+		$site->restore_wordpress_laravel();
 		
 		return Redirect::to('/wordpress_plus_laravel?success=true');
 	}
