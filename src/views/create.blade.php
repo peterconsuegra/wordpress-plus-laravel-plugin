@@ -21,7 +21,8 @@
 				<ul>
 
 					<li>Each Laravel integration is created in a separate folder</li>
-					<li>You can have more than one Laravel application integrated with your WordPress site. >WordPress Pete makes it possible for you to access all WordPress data and logic from your each Laravel application</li>
+					<li>You can have more than one Laravel application integrated with your WordPress site. WordPress Pete makes it possible for you to access all WordPress data and logic from your each Laravel application</li>
+					<li>The "Laravel app name" is used to create the URL of the Laravel application and depends on the "Laravel Integration Type", for "Same domain" it would be <i>mywordpressite.com/myapp</i> and for "Separate Subdomain" it would be: <i>myapp.mywordpressite.com</i></li>
 					<li>To see more tutorials about how WordPress Pete works go to the <a href="https://github.com/peterconsuegra/wordpress-pete-docker/wiki">WIKI</a></li>
 				</ul>
 				
@@ -120,7 +121,7 @@
 			
 			<select class="form-control" id="integration_type-field" name="integration_type">';
 			 <option value="">Laravel Integration Type</option>
-			 <option value="inside_wordpress">Inside WordPress</option>
+			 <option value="inside_wordpress">Same domain</option>
 			 <option value="separate_subdomain">Separate subdomain</option>
 		 	</select>
 			
@@ -171,9 +172,9 @@
 	
 	$("#integration_type-field").change(function() {
 		if($(this).val()=="inside_wordpress"){
-			input = '<input type="text" id="wordpress_laravel_name-field" placeholder="WordPress route" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />';
+			input = '<input type="text" id="wordpress_laravel_name-field" placeholder="Laravel app name" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />';
 		}else{
-			input = '<input type="text" id="wordpress_laravel_name-field" placeholder="Subdomain" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />';
+			input = '<input type="text" id="wordpress_laravel_name-field" placeholder="Laravel app name" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />';
 		}
 		$("#integration_param").html(input);
 	});
