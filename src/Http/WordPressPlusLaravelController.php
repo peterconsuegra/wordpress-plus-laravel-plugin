@@ -117,6 +117,18 @@ class WordPressPlusLaravelController extends Controller
 		
 		Log::info("wordpressLaravel check1");
 		
+		//inside_wordpress validations
+		$forbidden_names=["cache","ozone-speed","wp-admin","wp-content","wp-includes"];
+		
+		if($request->input("integration_type") == "inside_wordpress"){
+			
+			if(in_array($request->input("action_name"), $forbidden_names)){
+				 
+				 return redirect('wordpress_plus_laravel/create')->withErrors("Forbidden project name");
+			}
+		
+		}
+		
 		if($site->action_name == "new_wordpress_laravel"){
 			
 			//CHECK PHP VERSIONS
@@ -124,7 +136,7 @@ class WordPressPlusLaravelController extends Controller
 			
 	    	$validator = Validator::make($fields_to_validator, [
 		   	 'name' =>  array('required', 'regex:/^[a-zA-Z0-9-_]+$/','unique:sites'),
-			 'wordpress_laravel_name' =>  array('required'),
+			 'wordpress_laravel_name' =>  array('required', 'regex:/^[a-zA-Z0-9-_]+$/'),
 			 'integration_type' =>  array('required'),
 			 "wordpress_laravel_target" =>  array('required'),
 			 "laravel_version" =>  array('required'),
