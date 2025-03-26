@@ -78,6 +78,7 @@
                         <th>Url</th>
                         <th>Action</th>
 						<th>App</th>
+						<th>Integration</th>
                          <th class="text-right">Options</th>
                         </tr>
                     </thead>
@@ -103,6 +104,13 @@
 							@endif
 						@endif
 					
+					</td>
+					<td>
+					@if($site->integration_type == "inside_wordpress")
+						Same Domain
+					@else
+						Separate Subdomain
+					@endif
 					</td>
 					
                                 <td class="text-right">
