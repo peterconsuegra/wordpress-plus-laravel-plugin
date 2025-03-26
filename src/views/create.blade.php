@@ -10,8 +10,7 @@
 	
 <form action="/wordpress_plus_laravel/store" id ="SiteForm" method="POST" enctype="multipart/form-data">
 
-	<input type="hidden" name="_token" value="{{ csrf_token() }}">	
-	<input type="hidden" name="integration_type" value="separate_subdomain">		
+	<input type="hidden" name="_token" value="{{ csrf_token() }}">		
 	
 	
 	<div class="row">
@@ -23,7 +22,7 @@
 
 					<li>Each Laravel integration is created in a separate folder</li>
 					<li>You can have more than one Laravel application integrated with your WordPress site. WordPress Pete makes it possible for you to access all WordPress data and logic from your each Laravel application</li>
-					<li>The "Laravel app name" is used to create the URL of the Laravel application for example: <i>myapp.mywordpressite.com</i></li>
+					<li>The "Laravel app name" is used to create the URL of the Laravel application and depends on the "Laravel Integration Type", for "Same domain" it would be <i>mywordpressite.com/myapp</i> and for "Separate Subdomain" it would be: <i>myapp.mywordpressite.com</i></li>
 					<li>To see WordPress + Laravel tutorials <a href="https://wordpresspete.com/tutorials/">click here.</a></li>
 				</ul>
 				
@@ -60,7 +59,6 @@
 				
 				<select class="form-control" id="selected_version" name="selected_version">
 					<option value="">Select Laravel version</option>
-					<option value="5.8">5.8</option>
 					<option value="6.*">6.*</option>
 					<option value="7.*">7.*</option>
 					<option value="8.*">8.*</option>
@@ -114,11 +112,26 @@
 				
 	</div>    
 	
-	
+	<div class="row">
+		<div class="col-md-6">
+						
+			<div class="form-group integration_type" id="integration_type" style="display: none;">
+			
+			<select class="form-control" id="integration_type-field" name="integration_type">';
+			 <option value="">Laravel Integration Type</option>
+			 <option value="inside_wordpress">Same domain</option>
+			 <option value="separate_subdomain">Separate subdomain</option>
+		 	</select>
+			
+			</div>
+							
+		</div>
+							
+	</div>
 	
 				
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-6">
 			
 			
 						
@@ -126,7 +139,7 @@
 				
 				<div id="integration_param">
 				
-					<input type="text" id="wordpress_laravel_name-field" placeholder="Laravel app name" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />
+					
 				
 				</div>
 					 
@@ -155,7 +168,14 @@
 	});
 	
 	
-	
+	$("#integration_type-field").change(function() {
+		if($(this).val()=="inside_wordpress"){
+			input = '<input type="text" id="wordpress_laravel_name-field" placeholder="Laravel app name" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />';
+		}else{
+			input = '<input type="text" id="wordpress_laravel_name-field" placeholder="Laravel app name" name="wordpress_laravel_name" class="form-control inline_class url_wordpress_laravel" />';
+		}
+		$("#integration_param").html(input);
+	});
 	
 				
 	
