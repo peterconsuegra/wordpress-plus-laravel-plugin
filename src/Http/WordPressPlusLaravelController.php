@@ -234,7 +234,7 @@ class WordPressPlusLaravelController extends Controller
 		return Redirect::to('/wordpress_plus_laravel?success=true');
 	}
 
-	public function generate_ssl(Request $request){
+	public function wl_generate_ssl(Request $request){
 
 		Log::info("enter in generate_ssl");
 		$pete_options = new PeteOption();
