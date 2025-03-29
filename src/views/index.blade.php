@@ -116,6 +116,8 @@
                                 <td class="text-right">
                                   	
 									 <a class="option_button" role="group" href="/wordpress_plus_laravel/{{$site->id}}/edit"> Options</a>
+
+									 <a class="option_button generate_ssl_action" id="generate_ssl_{{$site->name}}" site_id="{{$site->id}}" href="#"> Generate SSL</a>
 									 
                                     <form action="/wordpress_plus_laravel/destroy" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
 										
@@ -182,7 +184,46 @@
 	<script type="text/javascript">
 	
 	
-	   
+	$(".generate_ssl_action").click(function() {
+
+		if (!confirm("You are about to generate a new SSL certificate for your site. This action may replace your current certificate. Do you wish to proceed?")) {
+			
+			return false;
+		}
+
+		activate_loader();
+		site_id = $(this).attr("site_id");
+		
+		$.ajax({
+			url: "/wordpress_plus_laravel/generate_ssl",
+			dataType: 'JSON',
+			type: 'POST',
+			data: {site_id: site_id},
+			success : function(result) {
+							
+				if(result["message"]){
+					deactivate_loader();
+					$.notify({
+						icon: "",
+						message: result["message"]
+
+						},{
+							type: 'info',
+							timer: 4000
+						});
+						$("#loadMe").modal("hide");
+						dialog.close();
+						return false;	
+								
+				}else{
+					deactivate_loader();
+					window.location.href = "/wordpress_plus_laravel";
+				}
+							
+			}		
+		});		
+
+});
 	
     	$(document).ready(function(){
 			
