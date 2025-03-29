@@ -60,7 +60,7 @@ class WordPressPlusLaravelController extends Controller
 		$user = Auth::user();
 		$viewsw = "/wordpress_plus_laravel";
 		
-		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version, integration_type, wordpress_laravel_url from sites where app_name='WordPress+Laravel' and deleted_at is NULL ORDER BY created_at DESC");
+		$sites = DB::select("select * from sites where app_name='WordPress+Laravel' and deleted_at is NULL ORDER BY created_at DESC");
 		
 		$tab_index = "index";
 		$current_user = Auth::user(); 
@@ -232,26 +232,6 @@ class WordPressPlusLaravelController extends Controller
 		$site->restore_wordpress_laravel();
 		
 		return Redirect::to('/wordpress_plus_laravel?success=true');
-	}
-
-	public function wl_generate_ssl(Request $request){
-
-		Log::info("enter in generate_ssl");
-		$pete_options = new PeteOption();
-
-		if($pete_options->get_meta_value('environment') != "production"){
-			$result = ['error' => true, 'message'=>'This feature is only avaliable in production environment'];
-			return response()->json($result);
-		}else{
-			$current_user = Auth::user();
-			$request_array = $request->all();
-			$site = Site::findOrFail($request->input('site_id'));
-			$site->ssl = true;
-			$site->save();
-			$site->generate_ssl($current_user->email);
-			return response()->json($request_array);
-		}
-
 	}
 	
 }

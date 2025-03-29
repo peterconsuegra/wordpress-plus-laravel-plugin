@@ -79,6 +79,7 @@
                         <th>Action</th>
 						<th>App</th>
 						<th>Integration</th>
+						<th>SSL</th>
                          <th class="text-right">Options</th>
                         </tr>
                     </thead>
@@ -110,6 +111,20 @@
 						Same Domain
 					@else
 						Separate Subdomain
+					@endif
+					
+					</td>
+
+					<td>
+					@if($site->ssl==true)
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+
+					@else
+
+					@if($site->integration_type == "separate_domain")
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					@endif
+
 					@endif
 					</td>
 					
