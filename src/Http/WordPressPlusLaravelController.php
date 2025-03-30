@@ -128,6 +128,26 @@ class WordPressPlusLaravelController extends Controller
 			}
 		
 		}
+
+		//check PHP version compatibility
+		$php_version = $pete_options->get_meta_value('php_version');
+		$laravel_version = $site->laravel_version;
+
+		$php_number = $this->extractPhpVersion($php_version);
+		
+		Log::info("php_version: $php_version");
+		Log::info("php_number: $php_number");
+		Log::info("laravel_version: $laravel_version");
+		
+		if($laravel_version == "9.*"){
+			if($php_number < 8.0 ){
+				return redirect('wordpress_plus_laravel/create')->withErrors("Please upgrade your system's PHP version to 8.0 or higher");
+			}
+		}else if($laravel_version == "10.*"){
+			if($php_number < 8.1 ){
+				return redirect('wordpress_plus_laravel/create')->withErrors("Please upgrade your system's PHP version to 8.1 or higher");
+			}
+		}
 		
 		if($site->action_name == "new_wordpress_laravel"){
 			
