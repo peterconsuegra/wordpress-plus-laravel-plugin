@@ -79,7 +79,7 @@
 		
 	 <div class="col-md-6">
 		 
-			@include('sites/_ssl_form')
+			
 							 
 	   </div>
 		

@@ -17,3 +17,4 @@ Route::post('/wordpress_plus_laravel/force_delete', 'Pete\WordPressPlusLaravel\H
 
 Route::post('wordpress_plus_laravel/destroy', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@destroy')->middleware(['web']);
 
+Route::get('/wordpress_plus_laravel/generate_ssl', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@wl_generate_ssl')->middleware(['web']);

@@ -233,5 +233,25 @@ class WordPressPlusLaravelController extends Controller
 		
 		return Redirect::to('/wordpress_plus_laravel?success=true');
 	}
+
+	public function wl_generate_ssl(Request $request){
+
+		Log::info("enter in generate_ssl");
+		$pete_options = new PeteOption();
+
+		if($pete_options->get_meta_value('environment') != "production"){
+			$result = ['error' => true, 'message'=>'This feature is only avaliable in production environment'];
+			return response()->json($result);
+		}else{
+			$current_user = Auth::user();
+			$request_array = $request->all();
+			$site = Site::findOrFail($request->input('site_id'));
+			$site->ssl = true;
+			$site->save();
+			$site->generate_ssl($current_user->email);
+			return response()->json($request_array);
+		}
+
+	}
 	
 }
