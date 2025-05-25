@@ -98,7 +98,6 @@ class WordPressPlusLaravelController extends Controller
 		$site->action_name = $request->input("action_name");
 		$site->user_id = $user->id;
 		$site->laravel_version = $request->input("selected_version");
-		
 		$site->wordpress_laravel_target_id = $request->input("wordpress_laravel_target");
 	  	$site->wordpress_laravel_git_branch = $request->input("wordpress_laravel_git_branch");
 	  	$site->wordpress_laravel_git = $request->input("wordpress_laravel_git");
@@ -116,6 +115,20 @@ class WordPressPlusLaravelController extends Controller
 		$fields_to_validator["laravel_version"] = $site->laravel_version;
 		
 		Log::info("wordpressLaravel check1");
+		$phpVersion = phpversion(); 
+		if ($site->laravel_version == "10.*"){
+			
+			$phpVersion = phpversion(); // ejemplo: "8.0.30"
+			$phpVersionParts = explode('.', $phpVersion);
+			$major = (int) ($phpVersionParts[0] ?? 0);
+			$minor = (int) ($phpVersionParts[1] ?? 0);
+
+			if ($major < 8 || ($major === 8 && $minor < 1)) {
+				return redirect('wordpress_plus_laravel/create')
+					->withErrors("Unable to create WordPress + Laravel 10 integration with PHP version minor than 8.1")
+					->withInput();
+			}
+		}
 		
 		//inside_wordpress validations
 		$forbidden_names=["cache","ozone-speed","wp-admin","wp-content","wp-includes"];

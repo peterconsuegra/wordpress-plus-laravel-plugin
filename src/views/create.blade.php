@@ -21,7 +21,7 @@
 				<ul>
 
 					<li>Each Laravel integration is created in a separate folder</li>
-					<li>You can have more than one Laravel application integrated with your WordPress site. WordPress Pete makes it possible for you to access all WordPress data and logic from your each Laravel application</li>
+					<li>You can have more than one Laravel application integrated with your WordPress site. WordPress Pete makes it possible for you to access all WordPress data from your each Laravel application</li>
 					<li>The "Laravel app name" is used to create the URL of the Laravel application and depends on the "Laravel Integration Type", for "Same domain" it would be <i>mywordpressite.com/myapp</i> and for "Separate Subdomain" it would be: <i>myapp.mywordpressite.com</i></li>
 					<li>To see WordPress + Laravel tutorials <a href="https://wordpresspete.com/tutorials/">click here.</a></li>
 				</ul>
@@ -59,8 +59,6 @@
 				
 				<select class="form-control" id="selected_version" name="selected_version">
 					<option value="">Select Laravel version</option>
-					<option value="6.*">6.*</option>
-					<option value="7.*">7.*</option>
 					<option value="8.*">8.*</option>
 					<option value="9.*">9.*</option>
 					<option value="10.*">10.*</option>
