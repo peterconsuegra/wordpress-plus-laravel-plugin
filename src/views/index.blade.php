@@ -116,9 +116,11 @@
                                 <td class="text-right">
                                   	
 									 <a class="option_button" role="group" href="/wordpress_plus_laravel/{{$site->id}}/edit"> Options</a>
+									
+									@if($site->integration_type != "inside_wordpress")
+										<a class="option_button generate_ssl_action" id="generate_ssl_{{$site->name}}" site_id="{{$site->id}}" href="#"> Generate SSL</a>
+									@endif
 
-									 <a class="option_button generate_ssl_action" id="generate_ssl_{{$site->name}}" site_id="{{$site->id}}" href="#"> Generate SSL</a>
-									 
                                     <form action="/wordpress_plus_laravel/destroy" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
 										
                                         <input type="hidden" name="site_id" value="{{$site->id}}">
