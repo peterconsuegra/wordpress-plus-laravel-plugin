@@ -10,7 +10,7 @@
 	
 	
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
 			
 			
 			
@@ -40,9 +40,16 @@
 				
                 <div class="form-group">
            
-					<p>Id: {{$site->id}}</p>
+					<p>Id: {{$site->id}}
 					
-					<p>Integration type: {{$site->integration_type}}</p>
+					<p>Integration type:
+					@if($site->integration_type == "inside_wordpress")
+						Same Domain
+					@else
+						Separate Subdomain
+					@endif
+
+					</p>
 					
                 </div>
 				
@@ -65,13 +72,7 @@
 					 @else
 	                 	<p>Check the built-in examples: <a href="http://{{$target_site->url}}/{{$site->name}}/wordpress_plus_laravel_examples" target="_blank">{{$target_site->url}}/{{$site->name}}/wordpress_plus_laravel_examples</a></p>		
 					 @endif
-				</div>
-				
-				<div class="form-group">
-				<p>For more information check the  <a target="_blank" href="https://github.com/peterconsuegra/wordpress-pete-docker/wiki">WIKI</a></p>
-				
-				</div>
-                
+				</div>    
 				
             </form>
 
