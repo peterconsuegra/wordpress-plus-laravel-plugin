@@ -1,0 +1,24 @@
+{
+    "name": "peteconsuegra/pete-backups-plugin",
+    "description": "Backups feature for WordPress Pete",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pedro Consuegra",
+            "email": "software@ozonegroup.co"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Pete\\PeteBackups\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+	"extra": {
+	    "laravel": {
+	        "providers": [
+	            "Pete\\PeteBackups\\PeteBackupsServiceProvider"
+	        ]
+	    }
+	}
+}
