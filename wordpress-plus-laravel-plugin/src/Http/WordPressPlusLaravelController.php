@@ -5,7 +5,7 @@ namespace Pete\WordPressPlusLaravel\Http;
 
 use Pete\WordPressPlusLaravel\Todo;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\PeteController;
 use Illuminate\Support\Facades\Auth;
 use App\Site;
 use Illuminate\Http\Request;
@@ -16,30 +16,21 @@ use View;
 use Log;
 use DB;
 
-class WordPressPlusLaravelController extends Controller
+class WordPressPlusLaravelController extends PeteController
 {
 	
-	public function __construct(Request $request){
-	    
-	    $this->middleware('auth');
-		$dashboard_url = env("PETE_DASHBOARD_URL");
-		$viewsw = "/wordpress_plus_laravel";
-		
-		//DEBUGING PARAMS
-		$debug = env('PETE_DEBUG');
-		if($debug == "active"){
-			$inputs = $request->all();
-			Log::info($inputs);
-		}
-		
-		$system_vars = parent::__construct();
-		$pete_options = $system_vars["pete_options"];
-		$sidebar_options = $system_vars["sidebar_options"];
-		$os_distribution = $system_vars["os_distribution"];
-		
-		View::share(compact('dashboard_url','viewsw','pete_options','system_vars','sidebar_options','os_distribution'));
-		   
-	}
+	public function __construct(Request $request)
+    {
+		//Ensure system vars are loaded
+        parent::__construct();          
+
+        $this->middleware('auth');
+
+        View::share([
+            'dashboard_url' => env('PETE_DASHBOARD_URL'),
+            'viewsw'        => '/wordpress_plus_laravel'
+        ]);
+    }
   	
 	public function create(Request $request){
 		
@@ -179,8 +170,8 @@ class WordPressPlusLaravelController extends Controller
 			}
      	 }
 		 
-		 $site->wordpress_laravel();
-		
+		$site->wordpress_laravel();
+		Site::reload_server();
 		
 		return Redirect::to('/wordpress_plus_laravel'.'/'.$site->id .'/edit' .'?success=' . 'true');
 		
