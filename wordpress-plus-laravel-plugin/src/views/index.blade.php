@@ -82,7 +82,7 @@
                                                 @endif
 
                                                 {{-- Logs --}}
-                                                <a  href="/wordpress_plus_laravel/{{ $site->id }}/edit"
+                                                <a  href="/wordpress_plus_laravel/logs/{{ $site->id }}"
                                                     class="btn btn-info">
                                                     <span class="glyphicon glyphicon-list-alt"></span> Logs
                                                 </a>

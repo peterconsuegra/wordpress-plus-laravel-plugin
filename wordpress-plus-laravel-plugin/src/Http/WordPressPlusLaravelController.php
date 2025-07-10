@@ -4,10 +4,9 @@
 namespace Pete\WordPressPlusLaravel\Http;
 
 use Pete\WordPressPlusLaravel\Todo;
-
+use Pete\WordPressPlusLaravel\Models\Site; 
 use App\Http\Controllers\PeteController;
 use Illuminate\Support\Facades\Auth;
-use App\Site;
 use Illuminate\Http\Request;
 use App\PeteOption;
 use Validator;
@@ -40,37 +39,23 @@ class WordPressPlusLaravelController extends PeteController
 		if($float_version < 7.1){
         	return redirect('sites/create')->withErrors("The PHP version must be >= 7.1 to activate WordPress+Laravel functionality.");
 		}
+
 		$current_user = Auth::user(); 
-		$viewsw = "/wordpress_plus_laravel";
-		return view("wordpress-plus-laravel-plugin::create",compact('float_version','viewsw','current_user'));
+		return view("wordpress-plus-laravel-plugin::create",compact('float_version','current_user'));
 	}
 	
 	
 	public function index(Request $request)
 	{
-		$user = Auth::user();
-		$viewsw = "/wordpress_plus_laravel";
-		
-		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version, integration_type, wordpress_laravel_url from sites where app_name='WordPress+Laravel' and deleted_at is NULL ORDER BY created_at DESC");
-		
-		$tab_index = "index";
 		$current_user = Auth::user(); 
-		$success = $request->input('success');
-		$site_id = $request->input('site_id');
-		return view('wordpress-plus-laravel-plugin::index', compact('sites','success','site_id','viewsw','tab_index','current_user'));
+		if($current_user->admin){
+			$sites = Site::orderBy('id', 'desc')->where("app_name","WordPress+Laravel")->paginate(50);
+		}else{
+			$sites = $user->my_sites()->where("app_name","WordPress+Laravel")->paginate(10);
+		}
+		return view('wordpress-plus-laravel-plugin::index', compact('sites','current_user'));
 	}
 	
-	public function trash(Request $request){
-		
-		$user = Auth::user();
-		$sites = DB::select("select id, url, name, app_name, action_name, laravel_version from sites where app_name='WordPress+Laravel' and deleted_at is NOT NULL ORDER BY created_at DESC");
-		$viewsw = "/wordpress_plus_laravel";
-		$tab_index = "trash";
-		$success = $request->input('success');
-		$site_id = $request->input('site_id');
-		$current_user = Auth::user(); 
-		return view('wordpress-plus-laravel-plugin::trash', compact('sites','success','site_id','viewsw','tab_index','current_user'));
-	}
 	
 	public function store(Request $request)
 	{
@@ -173,28 +158,29 @@ class WordPressPlusLaravelController extends PeteController
 		$site->wordpress_laravel();
 		Site::reload_server();
 		
-		return Redirect::to('/wordpress_plus_laravel'.'/'.$site->id .'/edit' .'?success=' . 'true');
+		return Redirect::to("/wordpress_plus_laravel/logs/$site->id");
 		
 	}
 	
-	public function edit(Request $request,$id)
+	public function logs(Request $request,$id)
 	{
-		$viewsw = "/wordpress_plus_laravel";
+		$current_user = Auth::user();
 		$site = Site::findOrFail($id);
-		$success = $request->input('success');
-		$current_user = Auth::user(); 
-		
-		$pete_options = new PeteOption();
-	    $app_root = $pete_options->get_meta_value('app_root');
-		
-		$web_server_error_file = "$app_root/wwwlog/$site->name/error.log";
-		$web_server_error_content = @file_get_contents("$app_root/wwwlog/$site->name/error.log");
-		$web_server_access_file = "$app_root/wwwlog/$site->name/access.log";
-		$web_server_access_content = @file_get_contents("$app_root/wwwlog/$site->name/access.log");
-		
-		$target_site = Site::findOrFail($site->wordpress_laravel_target_id);
-		
-		return view('wordpress-plus-laravel-plugin::edit', compact('site','success','viewsw','current_user','web_server_error_file','web_server_error_content','web_server_access_file','web_server_access_content','target_site'));
+		$app_root = app(PeteOption::class)->get_meta_value('app_root');
+
+		$paths = [
+			'web_server_error_file'  => "$app_root/wwwlog/{$site->name}/error.log",
+			'web_server_access_file' => "$app_root/wwwlog/{$site->name}/access.log",
+		];
+
+		$logs = collect($paths)->mapWithKeys(fn ($path, $key) => [
+			$key . '_content' => is_readable($path) ? file_get_contents($path) : 'file not found',
+		])->all();
+
+		return view(
+			'wordpress-plus-laravel-plugin::logs',
+			array_merge(['site' => $site, 'current_user' => $current_user], $paths, $logs)
+		);
 	}
 	
 	
@@ -212,7 +198,7 @@ class WordPressPlusLaravelController extends PeteController
 			}
 			
 		}
-		
+		Site::reload_server();
 		return Redirect::to('/wordpress_plus_laravel?success=true');
 	}
 	
@@ -225,19 +211,11 @@ class WordPressPlusLaravelController extends PeteController
 			$site->force_delete_wordpress();
 			$site->forceDelete();
 		}
-		
+		Site::reload_server();
  		return Redirect::to('wordpress_plus_laravel/trash');
 	
     }
 	
-	public function restore(Request $request){
-		$site = Site::withTrashed()->findOrFail($request->input('id'));
-		$site->restore();
-		$site->restore_wordpress_laravel();
-		
-		return Redirect::to('/wordpress_plus_laravel?success=true');
-	}
-
 	public function wl_generate_ssl(Request $request){
 
 		Log::info("enter in generate_ssl");
