@@ -2,15 +2,16 @@
 
 @section('content')
 <div class="container-fluid">
-    {{-- hero ------------------------------------------------------------- --}}
+
     <div class="row align-items-center mb-5">
         <div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
-            <img src="/pete.png" alt="WordPress Pete" class="img-responsive" style="max-height:200px">
+            <img src="/pete.png" alt="WordPress Pete" class="img-responsive" style="max-height:200px">
         </div>
-        <div class="col-md-6 d-flex justify-content-md-end align-items-center">
+        <div class="col-md-6 d-flex flex-column justify-content-center">
             <a href="{{ url('/wordpress_plus_laravel/create') }}" class="btn btn-primary btn-lg w-100">
                 <span class="glyphicon glyphicon-plus"></span>&nbsp;Create WordPress&nbsp;+&nbsp;Laravel Instance
             </a>
+            <p class="text-muted mb-0">Turn WordPress into a full-scale marketing and sales engine — with landing pages, payments, tracking, and unlimited plugins — while Laravel delivers the custom features your users need.</p>
         </div>
     </div>
 
@@ -51,7 +52,7 @@
                                     <th>Project Name</th>
                                     <th>URL</th>
                                     <th>Integration</th>
-                                    <th class="text-right" width="260">Actions</th>
+                                    <th class="text-center" width="260">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>

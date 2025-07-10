@@ -154,8 +154,9 @@
 	</div>
            
                
-	<button type="submit" id="create_button" style="width:100%;" class="btnpete">Create</button>
-	<br /><br />
+	<button type="submit" id="create_button" class="btn btn-primary btn-lg">
+                    <span class="glyphicon glyphicon-plus"></span> Create
+                </button>
 </form>
 
 	
