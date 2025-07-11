@@ -88,7 +88,7 @@
                                                 </a>
 
                                                 {{-- Delete --}}
-                                                <form  action="/wordpress_plus_laravel/destroy"
+                                                <form  action="/wordpress_plus_laravel/delete"
                                                        method="POST"
                                                        class="m-0 p-0 d-inline-flex align-items-center"
                                                        onsubmit="return confirm('Delete this integration? This action cannot be undone.');">

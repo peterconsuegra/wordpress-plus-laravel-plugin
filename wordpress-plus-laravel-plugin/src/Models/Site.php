@@ -9,12 +9,12 @@ use Log;
 // Extending Site Model 
 class Site extends BaseSite   
 {
-    public function set_wordpress_laravel_url($site_id){
+	public function set_wordpress_laravel_url($site_id){
 		$target_site = Site::findOrFail($site_id);
 		$this->url = $this->name . '.' . $target_site->url;
 	}
 
-    public function delete_wordpress_laravel() {
+    public function delete_wordpress_laravel(){
 			
 		$pete_options = new PeteOption();
 	    $app_root = $pete_options->get_meta_value('app_root');
@@ -22,15 +22,13 @@ class Site extends BaseSite
 		$os_distribution = $pete_options->get_meta_value('os_distribution');
 	
 		$base_path = base_path();
-		chdir("$base_path/scripts/");
+		$script_path = $base_path."/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src";
+		chdir("$script_path/scripts/");
 			
 		$command = "./delete_wordpress_laravel.sh -n {$this->name} -r {$app_root} -q {$base_path} -a {$server_conf} -s {$this->id} -p {$os_distribution} -o {$this->integration_type} -l {$this->wp_load_path} -d {$this->wordpress_laravel_name}";
 		$output = shell_exec($command);
-  	  	
-		$this->url = $this->url . "_odeleted_" . $this->id;
-		$this->name = $this->name . "_odeleted_" . $this->id;
-		$this->save();
-		$this->delete();
+
+		Site::change_file_permission("$script_path/scripts/create_wordpress_laravel.sh");
 		
 	  	if(env('PETE_DEBUG') == "active"){
 			Log::info("######DELETE LOGIC DEBUG########");
@@ -41,7 +39,7 @@ class Site extends BaseSite
   	  	}
 	}
 
-    public function wordpress_laravel() {
+    public function create_wordpress_laravel() {
 		
 		$pete_options = new PeteOption();
 	    $app_root = $pete_options->get_meta_value('app_root');
@@ -98,16 +96,18 @@ class Site extends BaseSite
 		}else{
 			$ssl = "false";
 		}
-			
-		$command = "./wordpress_laravel.sh -p {$db_root_pass} -r {$app_root} -m {$logs_route} -z {$os_distribution} -a {$server_conf} -b {$this->wordpress_laravel_git_branch} -g {$this->wordpress_laravel_git} -n {$this->name} -u {$this->wordpress_laravel_url} -j {$os_version} -v {$os} -l {$this->wp_load_path} -e {$this->wp_url} -t {$server} -w {$server_version} -c {$this->action_name} -o {$this->laravel_version} -h {$ssl} -x {$db_host} -k {$debug} -q {$target_site->db_name} -y {$this->db_user} -i {$db_user_pass} -s {$this->integration_type} -d {$this->wordpress_laravel_name}";
-	    chdir("$base_path/scripts/");
+		
+		$script_path = $base_path."/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src";
+		$command = "./create_wordpress_laravel.sh -p {$db_root_pass} -r {$app_root} -m {$logs_route} -z {$os_distribution} -a {$server_conf} -b {$this->wordpress_laravel_git_branch} -g {$this->wordpress_laravel_git} -n {$this->name} -u {$this->wordpress_laravel_url} -j {$os_version} -v {$os} -l {$this->wp_load_path} -e {$this->wp_url} -t {$server} -w {$server_version} -c {$this->action_name} -o {$this->laravel_version} -h {$ssl} -x {$db_host} -k {$debug} -q {$target_site->db_name} -y {$this->db_user} -i {$db_user_pass} -s {$this->integration_type} -d {$this->wordpress_laravel_name}";
+	    chdir("$script_path/scripts/");
 		
 	   	putenv("COMPOSER_HOME=/usr/local/bin/composer");
 		putenv("COMPOSER_CACHE_DIR=~/.composer/cache");
 		
+		Site::change_file_permission("$script_path/scripts/create_wordpress_laravel.sh");
 		$output = shell_exec($command);
 	  	if($debug == "active"){
-			Log::info("Action: wordpress_laravel");
+			Log::info("Action: create_wordpress_laravel");
 			Log::info($command);
   			Log::info("Output:");
 			Log::info($output);

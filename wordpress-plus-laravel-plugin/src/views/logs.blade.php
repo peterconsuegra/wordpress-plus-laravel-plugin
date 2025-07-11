@@ -29,16 +29,14 @@
 		
     </div>
 
-    <h3>
-        Logs for
-        <a href="http://{{ $site->integration_type === 'separate_subdomain'
-                          ? $site->wordpress_laravel_url
-                          : $site->url }}" target="_blank">
-            {{ $site->integration_type === 'separate_subdomain'
-                ? $site->wordpress_laravel_url
-                : $site->url }}
-        </a>
-    </h3>
+    {{-- ── Site output ───────────────────────────────────────────── --}}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Terminal output</strong>
+            <small class="text-muted"></small>
+        </div>
+        <pre style="max-height:400px;overflow:auto">{{ $site->output }}</pre>
+    </div>
 
     {{-- ── Apache error.log ───────────────────────────────────────────── --}}
     <div class="panel panel-default">

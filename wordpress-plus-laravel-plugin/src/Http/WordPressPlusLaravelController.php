@@ -59,13 +59,10 @@ class WordPressPlusLaravelController extends PeteController
 	
 	public function store(Request $request)
 	{
-		Log::info("wordpressLaravel check0a");
+		
 		$pete_options = new PeteOption();
 		$user = Auth::user();
 		$fields_to_validator = $request->all();
-		
-		Log::info("ACTION NAME:");
-		Log::info($request->input("action_name"));
 		
 		$site = new Site();
 		$site->output = "";
@@ -81,8 +78,6 @@ class WordPressPlusLaravelController extends PeteController
 		$site->name = $site->wordpress_laravel_name;
 		$site->integration_type = $request->input("integration_type");
 		
-		Log::info("wordpressLaravel check0");
-		
 		if(isset($site->wordpress_laravel_target_id))
 		  $site->set_wordpress_laravel_url($site->wordpress_laravel_target_id);
 		
@@ -90,7 +85,6 @@ class WordPressPlusLaravelController extends PeteController
 		$fields_to_validator["name"] = $site->name;
 		$fields_to_validator["laravel_version"] = $site->laravel_version;
 		
-		Log::info("wordpressLaravel check1");
 		$phpVersion = phpversion(); 
 		if ($site->laravel_version == "10.*"){
 			
@@ -119,9 +113,6 @@ class WordPressPlusLaravelController extends PeteController
 		}
 		
 		if($site->action_name == "new_wordpress_laravel"){
-			
-			//CHECK PHP VERSIONS
-			//$php_version = floatval(phpversion());
 			
 	    	$validator = Validator::make($fields_to_validator, [
 		   	 'name' =>  array('required', 'regex:/^[a-zA-Z0-9-_]+$/','unique:sites'),
@@ -155,7 +146,7 @@ class WordPressPlusLaravelController extends PeteController
 			}
      	 }
 		 
-		$site->wordpress_laravel();
+		$site->create_wordpress_laravel();
 		Site::reload_server();
 		
 		return Redirect::to("/wordpress_plus_laravel/logs/$site->id");
@@ -184,43 +175,28 @@ class WordPressPlusLaravelController extends PeteController
 	}
 	
 	
-	public function destroy(Request $request)
+	public function delete(Request $request)
 	{
 		$user = Auth::user();
 		$site = Site::findOrFail($request->input("site_id"));
 		
 		if($user->is_owner_and_admin($site)){
 			$site->delete_wordpress_laravel();
-			$site->delete();
+
 			$debug = env('PETE_DEBUG');
 			if($debug == "active"){
 				Log::info('Ouput deleteDebug' . $site->output);
 			}
-			
+
+			$site->delete();
 		}
 		Site::reload_server();
-		return Redirect::to('/wordpress_plus_laravel?success=true');
+		return Redirect::to('/wordpress_plus_laravel');
 	}
-	
-    public function force_delete(Request $request){
-	   
-	    $user = Auth::user();
- 		$site = Site::onlyTrashed()->findOrFail($request->input("site_id"));	
- 		
-		if($user->is_owner_and_admin($site)){
-			$site->force_delete_wordpress();
-			$site->forceDelete();
-		}
-		Site::reload_server();
- 		return Redirect::to('wordpress_plus_laravel/trash');
-	
-    }
 	
 	public function wl_generate_ssl(Request $request){
 
-		Log::info("enter in generate_ssl");
 		$pete_options = new PeteOption();
-
 		if($pete_options->get_meta_value('environment') != "production"){
 			$result = ['error' => true, 'message'=>'This feature is only avaliable in production environment'];
 			return response()->json($result);
@@ -233,7 +209,6 @@ class WordPressPlusLaravelController extends PeteController
 			$site->generate_ssl($current_user->email);
 			return response()->json($request_array);
 		}
-
 	}
 	
 }

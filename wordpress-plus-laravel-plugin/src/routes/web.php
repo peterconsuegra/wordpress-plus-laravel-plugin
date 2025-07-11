@@ -13,6 +13,6 @@ Route::get('/wordpress_plus_laravel/logs/{id}', 'Pete\WordPressPlusLaravel\Http\
 
 Route::post('/wordpress_plus_laravel/force_delete', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@force_delete')->middleware(['web']);
 
-Route::post('wordpress_plus_laravel/destroy', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@destroy')->middleware(['web']);
+Route::post('wordpress_plus_laravel/delete', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@delete')->middleware(['web']);
 
 Route::get('/wordpress_plus_laravel/generate_ssl', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@wl_generate_ssl')->middleware(['web']);
