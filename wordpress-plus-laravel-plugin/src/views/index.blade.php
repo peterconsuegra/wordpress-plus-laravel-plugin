@@ -11,7 +11,7 @@
             <a href="{{ url('/wordpress_plus_laravel/create') }}" class="btn btn-primary btn-lg w-100">
                 <span class="glyphicon glyphicon-plus"></span>&nbsp;Create WordPress&nbsp;+&nbsp;Laravel Instance
             </a>
-            <p class="text-muted mb-0">Turn WordPress into a full-scale marketing and sales engine — with landing pages, payments, tracking, and unlimited plugins — while Laravel delivers the custom features your users need.</p>
+            <p class="text-muted mb-0">Turn WordPress into a full-scale marketing and sales engine — with landing pages, subscriptions, payments, tracking, and unlimited plugins — while Laravel delivers the custom features your users need.</p>
         </div>
     </div>
 
