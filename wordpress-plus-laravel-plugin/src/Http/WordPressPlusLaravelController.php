@@ -9,6 +9,7 @@ use App\Http\Controllers\PeteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\PeteOption;
+use App\OServer;
 use Validator;
 use Illuminate\Support\Facades\Redirect;
 use View;
@@ -147,7 +148,7 @@ class WordPressPlusLaravelController extends PeteController
      	 }
 		 
 		$site->create_wordpress_laravel();
-		Site::reload_server();
+		OServer::reload_server();
 		
 		return Redirect::to("/wordpress_plus_laravel/logs/$site->id");
 		
@@ -190,7 +191,7 @@ class WordPressPlusLaravelController extends PeteController
 
 			$site->delete();
 		}
-		Site::reload_server();
+		OServer::reload_server();
 		return Redirect::to('/wordpress_plus_laravel');
 	}
 	
