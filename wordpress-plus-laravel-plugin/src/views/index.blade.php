@@ -94,7 +94,7 @@
                                                        onsubmit="return confirm('Delete this integration? This action cannot be undone.');">
                                                     @csrf
                                                     <input type="hidden" name="site_id" value="{{ $site->id }}">
-                                                    <button type="submit" class="btn btn-danger">
+                                                    <button type="submit" id="delete_{{$site->name}}" class="btn btn-danger">
                                                         <span class="glyphicon glyphicon-trash" style="font-size:10px;"></span> Delete
                                                     </button>
                                                 </form>
