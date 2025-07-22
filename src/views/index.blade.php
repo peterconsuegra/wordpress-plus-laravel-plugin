@@ -64,6 +64,7 @@
                                             <a href="http://{{ $site->url }}" target="_blank">{{ $site->url }}</a>
                                         </td>
                                         <td>
+                                            Laravel version: {{$site->laravel_version}} <br />
                                             {{ $site->integration_type === 'inside_wordpress' ? 'Same Domain' : 'Separate Subdomain' }}
                                         </td>
                                         {{-- action buttons ---------------------------------------------------- --}}
