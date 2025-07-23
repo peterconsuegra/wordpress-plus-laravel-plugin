@@ -150,7 +150,7 @@ echo "APP_KEY=$laravel_key" >> $project_route/.env
 #cd $project_route && composer require peteconsuegra/wordpress-plus-laravel:dev-volar1 --update-with-dependencies
 cd $project_route && composer require peteconsuegra/wordpress-plus-laravel --update-with-dependencies
 
-cd $project_route && php artisan migrate
+#cd $project_route && php artisan migrate
 
 #echo "cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb"
 #cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb

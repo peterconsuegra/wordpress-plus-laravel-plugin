@@ -86,17 +86,23 @@ class WordPressPlusLaravelController extends PeteController
 		$fields_to_validator["name"] = $site->name;
 		$fields_to_validator["laravel_version"] = $site->laravel_version;
 		
-		$phpVersion = phpversion(); 
+		
+		$phpVersion = phpversion(); // ejemplo: "8.0.30"
+		$phpVersionParts = explode('.', $phpVersion);
+		$major = (int) ($phpVersionParts[0] ?? 0);
+		$minor = (int) ($phpVersionParts[1] ?? 0);
+		
 		if ($site->laravel_version == "10.*"){
 			
-			$phpVersion = phpversion(); // ejemplo: "8.0.30"
-			$phpVersionParts = explode('.', $phpVersion);
-			$major = (int) ($phpVersionParts[0] ?? 0);
-			$minor = (int) ($phpVersionParts[1] ?? 0);
-
 			if ($major < 8 || ($major === 8 && $minor < 1)) {
 				return redirect('wordpress_plus_laravel/create')
 					->withErrors("Unable to create WordPress + Laravel 10 integration with PHP version minor than 8.1")
+					->withInput();
+			}
+		}else if (($site->laravel_version == "11.*") || ($site->laravel_version == "12.*")){
+			if ($major < 8 || ($major === 8 && $minor < 2)) {
+				return redirect('wordpress_plus_laravel/create')
+					->withErrors("Unable to create WordPress + Laravel 10 integration with PHP version minor than 8.2")
 					->withInput();
 			}
 		}
@@ -160,6 +166,8 @@ class WordPressPlusLaravelController extends PeteController
 		$site = Site::findOrFail($id);
 		$app_root = app(PeteOption::class)->get_meta_value('app_root');
 
+		$target_site = Site::findOrFail($site->wordpress_laravel_target_id);
+
 		$paths = [
 			'web_server_error_file'  => "$app_root/wwwlog/{$site->name}/error.log",
 			'web_server_access_file' => "$app_root/wwwlog/{$site->name}/access.log",
@@ -171,7 +179,7 @@ class WordPressPlusLaravelController extends PeteController
 
 		return view(
 			'wordpress-plus-laravel-plugin::logs',
-			array_merge(['site' => $site, 'current_user' => $current_user], $paths, $logs)
+			array_merge(['site' => $site, 'current_user' => $current_user, 'target_site' => $target_site], $paths, $logs)
 		);
 	}
 	
