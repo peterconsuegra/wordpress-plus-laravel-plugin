@@ -70,6 +70,7 @@ if [[ $action_name == "New" ]]; then
 	mkdir $project_route
 	echo "cd $project_route && composer create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1"
 	cd $project_route && composer create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1
+	cd $project_route && php artisan schema:dump --prune
 
 elif [[ $action_name == "Import" ]]; then
 	
@@ -78,12 +79,6 @@ elif [[ $action_name == "Import" ]]; then
 	cd $project_route && git clone -b $wordpress_laravel_git_branch $wordpress_laravel_git .
 	echo "cd $project_route && composer install --ignore-platform-reqs 2>&1"
 	cd $project_route && composer install --ignore-platform-reqs 2>&1
-	
-	#wpml error patch
-	echo "rm $project_route/vendor/laravel/framework/src/illuminate/Foundation/helpers.php"
-	rm $project_route/vendor/laravel/framework/src/illuminate/Foundation/helpers.php
-	echo "cp $route/Pete/templates/helpers.php $project_route/vendor/laravel/framework/src/illuminate/Foundation/helpers.php"
-	cp $route/Pete/templates/helpers.php $project_route/vendor/laravel/framework/src/illuminate/Foundation/helpers.php
 	
 fi
 

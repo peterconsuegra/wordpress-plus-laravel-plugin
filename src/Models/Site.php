@@ -5,6 +5,7 @@ namespace Pete\WordPressPlusLaravel\Models;
 use App\Site as BaseSite;
 use App\PeteOption;
 use Log;
+use Illuminate\Support\Facades\Crypt; 
 
 // Extending Site Model 
 class Site extends BaseSite   
@@ -78,11 +79,12 @@ class Site extends BaseSite
 		
 		$db_host = env('DB_HOST') ?? 'localhost';
 		if($db_host != "localhost")
-			$db_host=$db_host.":3306";
+			$db_host=$db_host;
 	
-		$this->db_name = "db_" . substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
-		$this->db_user = "pete";
-	    $db_user_pass = env('PETE_ROOT_PASS');
+		$this->db_name = $target_site->db_name;
+		$this->db_user = $target_site->db_user;
+		$db_user_pass = Crypt::decryptString($target_site->db_password);
+	    
 		
 		#hack project_name for multiple dashboard.* logic
 		if($this->integration_type == "separate_subdomain"){
