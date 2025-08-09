@@ -29,7 +29,7 @@ class Site extends BaseSite
 		$command = "./delete_wordpress_laravel.sh -n {$this->name} -r {$app_root} -q {$base_path} -a {$server_conf} -s {$this->id} -p {$os_distribution} -o {$this->integration_type} -l {$this->wp_load_path} -d {$this->wordpress_laravel_name}";
 		$output = shell_exec($command);
 
-		Site::change_file_permission("$script_path/scripts/create_wordpress_laravel.sh");
+		#Site::change_file_permission("$script_path/scripts/create_wordpress_laravel.sh");
 		
 	  	if(env('PETE_DEBUG') == "active"){
 			Log::info("######DELETE LOGIC DEBUG########");
@@ -106,7 +106,7 @@ class Site extends BaseSite
 	   	putenv("COMPOSER_HOME=/usr/local/bin/composer");
 		putenv("COMPOSER_CACHE_DIR=~/.composer/cache");
 		
-		Site::change_file_permission("$script_path/scripts/create_wordpress_laravel.sh");
+		#Site::change_file_permission("$script_path/scripts/create_wordpress_laravel.sh");
 		$output = shell_exec($command);
 	  	if($debug == "active"){
 			Log::info("Action: create_wordpress_laravel");
