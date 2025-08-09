@@ -65,16 +65,33 @@ else
 	project_route=$route/$project_name
 fi
 
+mkdir $project_route
+
 if [[ $action_name == "New" ]]; then
-	
-	mkdir $project_route
-	echo "cd $project_route && composer create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1"
-	cd $project_route && composer create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1
-	cd $project_route && php artisan schema:dump --prune
+
+	if [[ $laravel_version == "10.*" ]]; then
+		echo "cd $project_route && git clone https://github.com/peterconsuegra/wordpress-laravel10-boilerplate.git ."
+		cd $project_route && git clone https://github.com/peterconsuegra/wordpress-laravel10-boilerplate.git .
+		echo "cd $project_route && composer install --ignore-platform-reqs 2>&1"
+		cd $project_route && composer install --ignore-platform-reqs 2>&1
+	elif [[ "$laravel_version" == "11.*" ]]; then
+		echo "cd $project_route && git clone https://github.com/peterconsuegra/wordpress-laravel11-boilerplate.git ."
+		cd $project_route && git clone https://github.com/peterconsuegra/wordpress-laravel11-boilerplate.git .
+		echo "cd $project_route && composer install --ignore-platform-reqs 2>&1"
+		cd $project_route && composer install --ignore-platform-reqs 2>&1
+	elif [[ "$laravel_version" == "12.*" ]]; then
+		echo "cd $project_route && git clone https://github.com/peterconsuegra/wordpress-laravel12-boilerplate.git ."
+		cd $project_route && git clone https://github.com/peterconsuegra/wordpress-laravel12-boilerplate.git .
+		echo "cd $project_route && composer install --ignore-platform-reqs 2>&1"
+		cd $project_route && composer install --ignore-platform-reqs 2>&1
+	else
+		echo "cd $project_route && composer create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1"
+		cd $project_route && composer create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1
+		cd $project_route && php artisan schema:dump --prune
+	fi
 
 elif [[ $action_name == "Import" ]]; then
 	
-	mkdir $project_route
 	echo "cd $project_route && git clone -b $wordpress_laravel_git_branch $wordpress_laravel_git ."
 	cd $project_route && git clone -b $wordpress_laravel_git_branch $wordpress_laravel_git .
 	echo "cd $project_route && composer install --ignore-platform-reqs 2>&1"
@@ -113,9 +130,18 @@ DB_PASSWORD=$pdb
 WP_LOAD_PATH=$wp_load_path" > $project_route/.env
 
 if [[ $ssl == "true" ]]; then
-	echo "WP_URL=https://$wp_url" >> $project_route/.env
+
+	echo "
+	WP_URL=https://$wp_url
+	https://$wp_url/wp-login.php" >> $project_route/.env
+
 else
-	echo "WP_URL=http://$wp_url" >> $project_route/.env
+
+	echo "
+	WP_URL=http://$wp_url
+	WP_URL_LOGIN=http://$wp_url/wp-login.php
+	" >> $project_route/.env
+
 fi
 	
 mkdir $logs_route/$project_name
@@ -132,35 +158,33 @@ fi
 
 echo "Running the following commands..."
 echo "cd $route/$project_name && php artisan key:generate"
-echo "cd $route/$project_name && php artisan migrate"
 
 #HACK TO GENERATE APP_KEY
 echo "`cd $project_route && php artisan key:generate --show`"
 laravel_key=`cd $project_route && php artisan key:generate --show`
 echo "APP_KEY=$laravel_key" >> $project_route/.env
 
-#INSTALL wordpress-plus-laravel PACKAGE
-#cd $project_route && composer require peteconsuegra/wordpress-plus-laravel
-#cd $project_route && composer require peteconsuegra/wordpress-plus-laravel:dev-master
-#cd $project_route && composer require peteconsuegra/wordpress-plus-laravel:dev-volar1 --update-with-dependencies
-cd $project_route && composer require peteconsuegra/wordpress-plus-laravel --update-with-dependencies
+#INSTALL wordpress-plus-laravel PACKAGE LEGACY
+#cd $project_route && composer require peteconsuegra/wordpress-plus-laravel --update-with-dependencies
 
-#cd $project_route && php artisan migrate
+echo "before if integration"
+if [[ $integration_type == "inside_wordpress" ]]; then
 
-#echo "cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb"
-#cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb
+	echo "inside if inside_wordpress"
+	#rm "$project_route/public/index.php"
+	#cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/laravel11_index.php" "$project_route/index.php"
+	#mv "$project_route/public/.htaccess" "$project_route/.htaccess" 
 
-if test "$integration_type" = 'inside_wordpress'; then
+	rm "$project_route/public/index.php"
+	mv "$project_route/public/.htaccess" "$project_route/.htaccess" 
+	if [[ $laravel_version == "10.*" ]]; then
+		cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/laravel10_index.php" "$project_route/index.php"
+	elif [[ "$laravel_version" == "11.*" ]]; then
+		cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/laravel11_index.php" "$project_route/index.php"
+	elif [[ "$laravel_version" == "12.*" ]]; then
+		cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/laravel12_index.php" "$project_route/index.php"
+	fi
+
 	#echo "cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb --integration_type=inside_wordpress"
-	cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb --integration_type=inside_wordpress
-else
-	#echo "cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb --integration_type=external"
-	cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb --integration_type=external
+	#cd $project_route && php artisan new_wordpress_plus_laravel --db_user=$udb --db_name=$odb --db_pass=$pdb --integration_type=inside_wordpress
 fi
-
-
-
-
-
-
-

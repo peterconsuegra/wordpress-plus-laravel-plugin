@@ -20,11 +20,6 @@
  					 	<p>URL: <a href="http://{{$target_site->url}}/{{$site->name}}" target="_blank">{{$target_site->url}}/{{$site->name}}</a></p>
  					@endif
 				
- 					@if($site->integration_type=="separate_subdomain")
- 	                 	<p>Check the built-in examples: <a href="http://{{$site->url}}/wordpress_plus_laravel_examples" target="_blank">{{$site->url}}/wordpress_plus_laravel_examples</a></p>
- 					@else
- 	                 	<p>Check the built-in examples: <a href="http://{{$target_site->url}}/{{$site->name}}/wordpress_plus_laravel_examples" target="_blank">{{$target_site->url}}/{{$site->name}}/wordpress_plus_laravel_examples</a></p>		
- 					@endif		
          </div>
 		
      </div>
