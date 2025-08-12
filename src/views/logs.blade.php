@@ -1,54 +1,116 @@
- {{-- vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/views/logs.blade.php --}}
- @extends('layout')
+@extends('layout')
 
- @section('content')
+@section('content')
+<div class="container-fluid">
 
- <div class="row" style="margin-top: 20px">
-         <div class="col-md-12">
-				
- 					<p>Integration type:
- 					@if($site->integration_type == "inside_wordpress")
- 						Same Domain
- 					@else
- 						Separate Subdomain
- 					@endif
- 					</p>
-					 
- 					@if($site->integration_type=="separate_subdomain")
-                      	<p>URL: <a href="http://{{$site->wordpress_laravel_url}}" target="_blank">{{$site->wordpress_laravel_url}}</a></p>
- 					@else
- 					 	<p>URL: <a href="http://{{$target_site->url}}/{{$site->name}}" target="_blank">{{$target_site->url}}/{{$site->name}}</a></p>
- 					@endif
-				
-         </div>
-		
-     </div>
+  {{-- hero ------------------------------------------------------------- --}}
+  <div class="row align-items-center mb-4 g-3">
+    <div class="col-md-7">
+      <h2 class="mb-1">Integration Logs</h2>
+      <p class="text-muted mb-0">for <strong>{{ $site->name }}</strong></p>
+    </div>
 
-     {{-- ── Site output ───────────────────────────────────────────── --}}
-     <div class="panel panel-default">
-         <div class="panel-heading">
-             <strong>Terminal output</strong>
-             <small class="text-muted"></small>
-         </div>
-         <pre style="max-height:400px;overflow:auto">{{ $site->output }}</pre>
-     </div>
+    @php
+      $integrationUrl = $site->integration_type === 'separate_subdomain'
+        ? $site->wordpress_laravel_url
+        : ($target_site->url . '/' . $site->name);
+    @endphp
 
-     {{-- ── Apache error.log ───────────────────────────────────────────── --}}
-     <div class="panel panel-default">
-         <div class="panel-heading">
-             <strong>Apache error.log</strong>
-             <small class="text-muted">{{ $web_server_error_file }}</small>
-         </div>
-         <pre style="max-height:400px;overflow:auto">{{ $web_server_error_file_content }}</pre>
-     </div>
+    <div class="col-md-5 d-flex gap-2 justify-content-md-end">
+      <a href="{{ url('/wordpress_plus_laravel') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to list
+      </a>
+      <a href="http://{{ $target_site->url }}" target="_blank" rel="noopener" class="btn btn-outline-primary">
+        <i class="bi bi-wordpress"></i> Open WordPress
+      </a>
+      <a href="http://{{ $integrationUrl }}" target="_blank" rel="noopener" class="btn btn-pete">
+        <i class="bi bi-box-arrow-up-right"></i> Open Integration
+      </a>
+    </div>
+  </div>
 
-     {{-- ── Apache access.log ──────────────────────────────────────────── --}}
-     <div class="panel panel-default">
-         <div class="panel-heading">
-             <strong>Apache access.log</strong>
-             <small class="text-muted">{{ $web_server_access_file }}</small>
-         </div>
-         <pre style="max-height:400px;overflow:auto">{{ $web_server_access_file_content }}</pre>
-     </div>
- @endsection
- 
+  {{-- details ---------------------------------------------------------- --}}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="panel">
+        <div class="panel-heading">
+          <h3 class="mb-0 fs-5">Details</h3>
+        </div>
+        <div class="p-3">
+          <div class="row gy-2 small">
+            <div class="col-md-3">
+              <div class="text-uppercase text-muted">Project</div>
+              <div class="fw-semibold">{{ $site->name }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-uppercase text-muted">Integration</div>
+              <div>{{ $site->integration_type === 'inside_wordpress' ? 'Same Domain' : 'Separate Subdomain' }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-uppercase text-muted">Laravel</div>
+              <div>{{ $site->laravel_version ?? '—' }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-uppercase text-muted">Integration URL</div>
+              <div>
+                <a href="http://{{ $integrationUrl }}" target="_blank" rel="noopener">
+                  {{ $integrationUrl }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer small text-muted">
+          Paths below are truncated to the most relevant files.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- terminal output -------------------------------------------------- --}}
+  <div class="row g-4">
+    <div class="col-12">
+      <div class="panel">
+        <div class="panel-heading d-flex justify-content-between align-items-center">
+          <h3 class="mb-0 fs-6"><i class="bi bi-terminal me-1"></i> Terminal output</h3>
+        </div>
+        <pre class="mb-0 small p-3 bg-light" style="max-height:420px; overflow:auto" data-autoscroll="end">{{ $site->output }}</pre>
+      </div>
+    </div>
+
+    {{-- Apache error.log ----------------------------------------------- --}}
+    <div class="col-12">
+      <div class="panel">
+        <div class="panel-heading d-flex justify-content-between align-items-center">
+          <h3 class="mb-0 fs-6"><i class="bi bi-exclamation-triangle me-1"></i> Apache error.log</h3>
+          <small class="text-muted">{{ $web_server_error_file }}</small>
+        </div>
+        <pre class="mb-0 small p-3 bg-light" style="max-height:420px; overflow:auto">{{ $web_server_error_file_content }}</pre>
+      </div>
+    </div>
+
+    {{-- Apache access.log ---------------------------------------------- --}}
+    <div class="col-12">
+      <div class="panel">
+        <div class="panel-heading d-flex justify-content-between align-items-center">
+          <h3 class="mb-0 fs-6"><i class="bi bi-list-check me-1"></i> Apache access.log</h3>
+          <small class="text-muted">{{ $web_server_access_file }}</small>
+        </div>
+        <pre class="mb-0 small p-3 bg-light" style="max-height:420px; overflow:auto">{{ $web_server_access_file_content }}</pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+@endsection
+
+@push('scripts')
+<script>
+  // auto-scroll the "Terminal output" box to the end
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-autoscroll="end"]').forEach(function (el) {
+      el.scrollTop = el.scrollHeight;
+    });
+  });
+</script>
+@endpush
