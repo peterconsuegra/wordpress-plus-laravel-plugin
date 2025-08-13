@@ -7,7 +7,7 @@
   <div class="row align-items-center mb-4 g-3">
     <div class="col-md-7">
       <h2 class="mb-1">Integration Logs</h2>
-      <p class="text-muted mb-0">for <strong>{{ $site->name }}</strong></p>
+      <p class="text-muted mb-0">for <strong><a href="http://{{ $site->url }}">{{ $site->url }}</strong></a></p>
     </div>
 
     @php
