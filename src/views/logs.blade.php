@@ -1,14 +1,37 @@
 @extends('layout')
 
+@push('head')
 <style>
-.terminal-output{
-  white-space: pre-wrap;      /* keep newlines, wrap long lines */
-  word-break: break-word;     /* break long “words” if needed */
-  overflow-wrap: anywhere;    /* last-resort breaks for giant tokens */
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  line-height: 1.45;
-}
+  /* Bounded, scrollable container for big logs */
+  .log-box{
+    max-width: 1024px !important;
+    max-height: 50vh !important;   /* change to 420px if you prefer a fixed height */
+    overflow-y: auto !important;
+    overflow-x: auto;
+    background: #0b1020;           /* terminal-like background */
+    color: #e6e6e6;
+    border-radius: .375rem;
+    border: 1px solid rgba(0,0,0,.08);
+    display: block;
+  }
+
+  .panel{
+    max-width: 1024px !important;
+  }
+
+  /* Preserve newlines; wrap super‑long tokens; monospace for readability */
+  .terminal-output{
+    margin: 0;
+    padding: 1rem;
+    white-space: pre-wrap;      /* keep newlines, allow wrapping */
+    word-break: break-word;     /* break long “words” if needed */
+    overflow-wrap: anywhere;    /* last‑resort breaks for giant tokens */
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    line-height: 1.45;
+    font-size: .875rem;         /* small but readable */
+  }
 </style>
+@endpush
 
 @section('content')
 <div class="container-fluid">
@@ -16,8 +39,7 @@
   {{-- hero ------------------------------------------------------------- --}}
   <div class="row align-items-center mb-4 g-3">
     <div class="col-md-7">
-      <h2 class="mb-1">Integration Logs</h2>
-      <p class="text-muted mb-0">for <strong><a href="http://{{ $site->url }}">{{ $site->url }}</strong></a></p>
+      
     </div>
 
     @php
@@ -34,94 +56,113 @@
         <i class="bi bi-wordpress"></i> Open WordPress
       </a>
       <a href="http://{{ $integrationUrl }}" target="_blank" rel="noopener" class="btn btn-pete">
-        <i class="bi bi-box-arrow-up-right"></i> Open Integration
+        <i class="bi bi-box-arrow-up-right"></i> Open Laravel Sync
       </a>
     </div>
   </div>
 
-   {{-- New fields --}}
-    <div class="col-md-3">
-        <div class="text-uppercase text-muted">GIT Branch</div>
-        <div>{{ $site->wordpress_laravel_git_branch ?? '—' }}</div>
-    </div>
-    <div class="col-md-3">
-        <div class="text-uppercase text-muted">GIT URL</div>
-        <div>
-            @if(!empty($site->wordpress_laravel_git))
-                <a href="{{ $site->wordpress_laravel_git }}" target="_blank" rel="noopener">
-                    {{ $site->wordpress_laravel_git }}
-                </a>
-            @else
-                —
-            @endif
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="text-uppercase text-muted">Type of Integration</div>
-        <div>{{ $site->integration_type ?? '—' }}</div>
-    </div>
-    <div class="col-md-3">
-        <div class="text-uppercase text-muted">Laravel Version</div>
-        <div>{{ $site->laravel_version ?? '—' }}</div>
-    </div>
+  @if($site->action_name == "New")
 
-  {{-- details ---------------------------------------------------------- --}}
+  {{-- details ----------------------------------------------------------- --}}
   <div class="row mb-4">
     <div class="col-12">
       <div class="panel">
         <div class="panel-heading">
-          <h3 class="mb-0 fs-5">Details</h3>
+          <h3 class="mb-0 fs-5">Sync Details</h3>
         </div>
         <div class="p-3">
           <div class="row gy-2 small">
-            <div class="col-md-3">
-              <div class="text-uppercase text-muted">Project</div>
-              <div class="fw-semibold">{{ $site->name }}</div>
-            </div>
-            <div class="col-md-3">
-              <div class="text-uppercase text-muted">Integration</div>
-              <div>{{ $site->integration_type === 'inside_wordpress' ? 'Same Domain' : 'Separate Subdomain' }}</div>
-            </div>
-            <div class="col-md-3">
-              <div class="text-uppercase text-muted">Laravel</div>
-              <div>{{ $site->laravel_version ?? '—' }}</div>
-            </div>
-            <div class="col-md-3">
-              <div class="text-uppercase text-muted">Integration URL</div>
+            <div class="col-md-6">
+            
+              <div class="text-uppercase text-muted">Laravel Sync URL</div>
               <div>
                 <a href="http://{{ $integrationUrl }}" target="_blank" rel="noopener">
                   {{ $integrationUrl }}
                 </a>
               </div>
+
+            </div>
+            <div class="col-md-6">
+              <div class="text-uppercase text-muted">Laravel Sync</div>
+              <div>{{ $site->integration_type === 'inside_wordpress' ? 'Same Domain' : 'Separate Subdomain' }}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="text-uppercase text-muted">Laravel Version</div>
+              <div>{{ $site->laravel_version ?? '—' }}</div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-uppercase text-muted">Project Name</div>
+                <div>{{ $site->name }}</div>
+
             </div>
           </div>
         </div>
-        <div class="panel-footer small text-muted">
-          Paths below are truncated to the most relevant files.
-        </div>
+       
       </div>
     </div>
   </div>
 
+  @else
+
+
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="panel">
+        <div class="panel-heading">
+          <h3 class="mb-0 fs-5">Laravel Sync Details</h3>
+        </div>
+        <div class="p-3">
+          <div class="row gy-2 small">
+            <div class="col-md-6">
+              <div class="text-uppercase text-muted">Laravel Sync URL</div>
+              <div><strong><a href="http://{{ $site->url }}">{{ $site->url }}</a></strong></div>
+            </div>
+            <div class="col-md-6">
+              <div class="text-uppercase text-muted">Laravel Sync</div>
+              <div>{{ $site->integration_type === 'inside_wordpress' ? 'Same Domain' : 'Separate Subdomain' }}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="text-uppercase text-muted">Branch</div>
+              <div>{{ $site->wordpress_laravel_git_branch ?? '—' }}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="text-uppercase text-muted">GIT URL</div>
+              <div>{{$site->wordpress_laravel_git}}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="text-uppercase text-muted">Project</div>
+              <div>{{ $site->name }}</div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+
+  @endif
+
   @php
-    $clean = preg_replace('/\x1B\[[0-9;]*[A-Za-z]/', '', $site->output);
+    // Strip ANSI color codes from output
+    $clean = preg_replace('/\x1B\[[0-9;]*[A-Za-z]/', '', $site->output ?? '');
   @endphp
 
-
-  {{-- terminal output -------------------------------------------------- --}}
+  {{-- terminal output --------------------------------------------------- --}}
   <div class="row g-4">
     <div class="col-12">
-        <div class="panel">
-            <div class="panel-heading d-flex justify-content-between align-items-center">
-                <h3 class="mb-0 fs-6"><i class="bi bi-terminal me-1"></i> Terminal output</h3>
-            </div>
-           <pre class="terminal-output mb-0 small p-3">
-            {{ $site->output }}
-            </pre>
+      <div class="panel">
+        <div class="panel-heading d-flex justify-content-between align-items-center">
+          <h3 class="mb-0 fs-6"><i class="bi bi-terminal me-1"></i> Terminal output</h3>
         </div>
+
+        <div class="log-box" data-autoscroll="end">
+          {{-- IMPORTANT: render plain text; no nl2br inside <pre> --}}
+          <pre class="terminal-output">{{ $clean }}</pre>
+        </div>
+      </div>
     </div>
 
-    {{-- Apache error.log ----------------------------------------------- --}}
+    {{-- Apache error.log ------------------------------------------------- --}}
     <div class="col-12">
       <div class="panel">
         <div class="panel-heading d-flex justify-content-between align-items-center">
@@ -132,7 +173,7 @@
       </div>
     </div>
 
-    {{-- Apache access.log ---------------------------------------------- --}}
+    {{-- Apache access.log ------------------------------------------------ --}}
     <div class="col-12">
       <div class="panel">
         <div class="panel-heading d-flex justify-content-between align-items-center">
@@ -149,7 +190,7 @@
 
 @push('scripts')
 <script>
-  // auto-scroll the "Terminal output" box to the end
+  // Auto-scroll any container marked with data-autoscroll="end"
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-autoscroll="end"]').forEach(function (el) {
       el.scrollTop = el.scrollHeight;
