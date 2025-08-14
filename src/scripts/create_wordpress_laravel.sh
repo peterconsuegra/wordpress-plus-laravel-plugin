@@ -170,7 +170,7 @@ if [[ $ssl == "true" ]]; then
 
 echo "
 WP_URL=https://$wp_url
-https://$wp_url/wp-login.php" >> $project_route/.env
+WP_URL_LOGIN=https://$wp_url/wp-login.php" >> $project_route/.env
 
 else
 

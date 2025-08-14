@@ -1,5 +1,15 @@
 @extends('layout')
 
+<style>
+.terminal-output{
+  white-space: pre-wrap;      /* keep newlines, wrap long lines */
+  word-break: break-word;     /* break long “words” if needed */
+  overflow-wrap: anywhere;    /* last-resort breaks for giant tokens */
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1.45;
+}
+</style>
+
 @section('content')
 <div class="container-fluid">
 
@@ -28,6 +38,32 @@
       </a>
     </div>
   </div>
+
+   {{-- New fields --}}
+    <div class="col-md-3">
+        <div class="text-uppercase text-muted">GIT Branch</div>
+        <div>{{ $site->wordpress_laravel_git_branch ?? '—' }}</div>
+    </div>
+    <div class="col-md-3">
+        <div class="text-uppercase text-muted">GIT URL</div>
+        <div>
+            @if(!empty($site->wordpress_laravel_git))
+                <a href="{{ $site->wordpress_laravel_git }}" target="_blank" rel="noopener">
+                    {{ $site->wordpress_laravel_git }}
+                </a>
+            @else
+                —
+            @endif
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="text-uppercase text-muted">Type of Integration</div>
+        <div>{{ $site->integration_type ?? '—' }}</div>
+    </div>
+    <div class="col-md-3">
+        <div class="text-uppercase text-muted">Laravel Version</div>
+        <div>{{ $site->laravel_version ?? '—' }}</div>
+    </div>
 
   {{-- details ---------------------------------------------------------- --}}
   <div class="row mb-4">
@@ -67,15 +103,22 @@
     </div>
   </div>
 
+  @php
+    $clean = preg_replace('/\x1B\[[0-9;]*[A-Za-z]/', '', $site->output);
+  @endphp
+
+
   {{-- terminal output -------------------------------------------------- --}}
   <div class="row g-4">
     <div class="col-12">
-      <div class="panel">
-        <div class="panel-heading d-flex justify-content-between align-items-center">
-          <h3 class="mb-0 fs-6"><i class="bi bi-terminal me-1"></i> Terminal output</h3>
+        <div class="panel">
+            <div class="panel-heading d-flex justify-content-between align-items-center">
+                <h3 class="mb-0 fs-6"><i class="bi bi-terminal me-1"></i> Terminal output</h3>
+            </div>
+           <pre class="terminal-output mb-0 small p-3">
+            {{ $site->output }}
+            </pre>
         </div>
-        <pre class="mb-0 small p-3 bg-light" style="max-height:420px; overflow:auto" data-autoscroll="end">{{ $site->output }}</pre>
-      </div>
     </div>
 
     {{-- Apache error.log ----------------------------------------------- --}}
