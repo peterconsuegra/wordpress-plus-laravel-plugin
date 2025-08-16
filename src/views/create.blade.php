@@ -9,8 +9,7 @@
       <img src="/pete.png" alt="WordPress Pete" class="img-fluid" style="max-height:200px">
     </div>
     <div class="col-md-6 d-flex flex-column justify-content-center">
-      <h2 class="mb-1">Create WordPress + Laravel Instance</h2>
-      <p class="text-muted mb-0">Integrate Laravel with an existing WordPress site in a couple of clicks.</p>
+      <h2 class="mb-1">Create WordPress ↔ Laravel Sync</h2>
     </div>
   </div>
 
@@ -95,7 +94,7 @@
 
           {{-- Integration type --}}
           <div class="mb-3 d-none" id="integration_type_wrap">
-            <label for="integration_type-field" class="form-label">Laravel Integration Type</label>
+            <label for="integration_type-field" class="form-label">Laravel Sync Type</label>
             <select class="form-select" id="integration_type-field" name="integration_type">
               <option value="">Select type</option>
               <option value="inside_wordpress" {{ old('integration_type')==='inside_wordpress' ? 'selected' : '' }}>Same domain</option>
@@ -133,7 +132,7 @@
         </form>
 
         <div class="panel-footer small text-muted">
-          WordPress Pete will provision the Laravel integration and reload the web server automatically.
+          WordPress Pete will provision the WordPress ↔ Laravel Sync and reload the web server automatically.
         </div>
       </div>
     </div>

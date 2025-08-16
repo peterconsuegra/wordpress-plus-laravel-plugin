@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-6 d-flex flex-column justify-content-center">
             <a href="{{ url('/wordpress_plus_laravel/create') }}" class="btn btn-pete btn-lg w-100">
-                <i class="bi bi-plus-lg me-1"></i>Create WordPress + Laravel Instance
+                <i class="bi bi-plus-lg me-1"></i>Create WordPress ↔ Laravel Sync
             </a>
             <p class="text-muted mb-0 mt-2">
                 Turn WordPress into a full marketing engine while Laravel powers your custom features.
@@ -42,7 +42,7 @@
         <div class="col-12">
             <div class="panel">
                 <div class="panel-heading d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0 fs-5">My WordPress + Laravel Integrations</h3>
+                    <h3 class="mb-0 fs-5">My WordPress ↔ Laravel Syncs</h3>
 
                     @if(isset($sites) && method_exists($sites,'total'))
                         <small class="text-muted">{{ $sites->total() }} total</small>
@@ -66,7 +66,7 @@
                                     <th width="60">ID</th>
                                     <th>Project Name</th>
                                     <th>URL</th>
-                                    <th>Integration</th>
+                                    <th class="text-center" width="70">SSL</th>
                                     <th class="text-end" width="320">Actions</th>
                                 </tr>
                             </thead>
@@ -81,8 +81,11 @@
                                             </a>
                                         </td>
                                         <td>
-                                            Laravel version: {{ $site->laravel_version }}<br>
-                                            {{ $site->integration_type === 'inside_wordpress' ? 'Same Domain' : 'Separate Subdomain' }}
+                                           @if($site->ssl)
+                                                <i class="bi bi-shield-check text-success" title="SSL enabled"></i>
+                                            @else
+                                                <i class="bi bi-shield-x text-danger" title="SSL disabled"></i>
+                                            @endif
                                         </td>
                                         <td class="text-end">
                                             <div class="btn-group btn-group-sm" role="group">
@@ -101,7 +104,7 @@
                                                 <a href="/wordpress_plus_laravel/logs/{{ $site->id }}"
                                                    class="btn btn-info"
                                                    title="View logs">
-                                                    <i class="bi bi-journal-text"></i> Logs
+                                                    <i class="bi bi-journal-text"></i> Sync Details
                                                 </a>
 
                                                 {{-- Delete --}}
