@@ -186,10 +186,12 @@ class WordPressPlusLaravelController extends PeteController
 	
 	public function delete(Request $request)
 	{
+		Log::info("Enter in delete WordPressPlusLaravelController");
 		$user = Auth::user();
 		$site = Site::findOrFail($request->input("site_id"));
 		
-		if($user->is_owner_and_admin($site)){
+		if($user->is_owner_or_admin($site)){
+			Log::info("Enter in delete WordPressPlusLaravelController");
 			$site->delete_wordpress_laravel();
 
 			$debug = env('PETE_DEBUG');
