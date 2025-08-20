@@ -38,7 +38,7 @@
 
   {{-- hero ------------------------------------------------------------- --}}
   <div class="row align-items-center mb-4 g-3">
-    <div class="col-md-7">
+    <div class="col-md-5">
       
     </div>
 
@@ -48,7 +48,7 @@
         : ($target_site->url . '/' . $site->name);
     @endphp
 
-    <div class="col-md-5 d-flex gap-2 justify-content-md-end">
+    <div class="col-md-7 d-flex gap-2 justify-content-md-end">
       <a href="{{ url('/wordpress_plus_laravel') }}" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left"></i> Back to list
       </a>
