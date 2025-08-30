@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
 
-Route::get('wordpress_plus_laravel/create', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@create')->middleware(['web']);
+use Illuminate\Support\Facades\Route;
+use Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController as WplController;
 
-Route::post('wordpress_plus_laravel/store', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@store')->middleware(['web']);
+Route::middleware(['web'])
+    ->prefix('wordpress-plus-laravel')
+    ->name('wpl.')
+    ->group(function (): void {
+        Route::get('/', [WplController::class, 'index'])->name('index');
+        Route::get('/create', [WplController::class, 'create'])->name('create');
+        Route::post('/', [WplController::class, 'store'])->name('store');
+        Route::get('/logs/{id}', [WplController::class, 'logs'])->whereNumber('id')->name('logs');
 
-Route::get('wordpress_plus_laravel', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@index')->middleware(['web']);
-
-Route::get('/wordpress_plus_laravel/{id}/edit', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@edit')->middleware(['web']);
-
-Route::get('/wordpress_plus_laravel/logs/{id}', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@logs')->middleware(['web']);
-
-Route::post('/wordpress_plus_laravel/force_delete', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@force_delete')->middleware(['web']);
-
-Route::post('wordpress_plus_laravel/delete', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@delete')->middleware(['web']);
-
-Route::get('/wordpress_plus_laravel/generate_ssl', 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController@wl_generate_ssl')->middleware(['web']);
+        Route::post('/delete', [WplController::class, 'delete'])->name('delete');
+        Route::post('/generate-ssl', [WplController::class, 'generateSsl'])->name('generate-ssl');
+});

@@ -49,7 +49,7 @@
     @endphp
 
     <div class="col-md-7 d-flex gap-2 justify-content-md-end">
-      <a href="{{ url('/wordpress_plus_laravel') }}" class="btn btn-outline-secondary">
+      <a href="{{ url('/wordpress-plus-laravel') }}" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left"></i> Back to list
       </a>
       <a href="http://{{ $target_site->url }}" target="_blank" rel="noopener" class="btn btn-outline-primary">

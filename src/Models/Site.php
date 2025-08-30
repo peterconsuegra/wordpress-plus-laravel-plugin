@@ -2,8 +2,8 @@
 
 namespace Pete\WordPressPlusLaravel\Models;
 
-use App\Site as BaseSite;
-use App\PeteOption;
+use App\Models\Site as BaseSite;
+use App\Services\PeteOption;
 use Log;
 use Illuminate\Support\Facades\Crypt; 
 
