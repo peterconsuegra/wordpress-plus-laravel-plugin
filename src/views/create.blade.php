@@ -124,9 +124,19 @@
 
           {{-- Import from Git (only for Import) --}}
           <div id="import_git_block" class="mb-3" v-show="showImport">
-            <div class="alert alert-info small">
-              Import a Laravel instance from a public HTTPS or SSH git URL.
-            </div>
+            <div class="alert alert-warning small">
+             
+              <strong>Use HTTPS to avoid SSH conflicts.</strong>
+                Import your WordPress ↔ Laravel instance using the <em>public HTTPS URL</em> of a public repository
+                (e.g., <code>https://github.com/username/repo.git</code>).
+                Private SSH URLs (<code>git@…</code>) are <strong>not supported</strong> for imports.
+              </div>
+
+              
+              <div class="alert alert-secondary small mt-2">
+                After the first import, you can set up more sophisticated CI/CD (e.g., deploy keys, GitHub Actions)
+                and switch your repository back to <strong>private</strong>. Public HTTPS is only required for the initial import.
+              </div>
 
             <div class="row g-3">
               <div class="col-md-8">
@@ -300,7 +310,11 @@
         const appNameHint     = ref('');
 
         const showCommon  = computed(()=> !!form.action_name);
-        const showVersion = computed(()=> form.action_name === 'new_wordpress_laravel');
+        
+        const showVersion = computed(()=> 
+          form.action_name === 'new_wordpress_laravel' || form.action_name === 'import_wordpress_laravel'
+        );
+
         const showImport  = computed(()=> form.action_name === 'import_wordpress_laravel');
 
         const gitUrlOk = computed(()=>{

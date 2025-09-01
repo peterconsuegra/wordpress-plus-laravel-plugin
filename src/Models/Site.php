@@ -74,7 +74,6 @@ class Site extends BaseSite
 	  		$this->wordpress_laravel_git = "something";
 		}else{
 			$this->action_name = "Import";
-			$this->laravel_version = "import";
 		}
 		
 		$db_host = env('DB_HOST') ?? 'localhost';

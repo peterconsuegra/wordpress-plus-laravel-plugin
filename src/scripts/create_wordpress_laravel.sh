@@ -133,6 +133,37 @@ elif [[ $action_name == "Import" ]]; then
 	cd $project_route && git clone -b $wordpress_laravel_git_branch $wordpress_laravel_git .
 	echo "cd $project_route && composer install --ignore-platform-reqs 2>&1"
 	cd $project_route && composer install --ignore-platform-reqs 2>&1
+
+	if [[ $integration_type == "inside_wordpress" ]]; then
+		echo "enter if inside_wordpress"
+		echo $laravel_version
+		
+		if [[ $laravel_version == "10.*" ]]; then
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/same_domain_laravel10_index.php" "$project_route/index.php"
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/htaccess_laravel10.txt" "$project_route/.htaccess"
+		elif [[ "$laravel_version" == "11.*" ]]; then
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/same_domain_laravel11_index.php" "$project_route/index.php"
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/htaccess_laravel11.txt" "$project_route/.htaccess"
+		elif [[ "$laravel_version" == "12.*" ]]; then
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/same_domain_laravel12_index.php" "$project_route/index.php"
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/htaccess_laravel12.txt" "$project_route/.htaccess"
+		fi
+	else
+		echo "enter if separate_domain"
+		echo $laravel_version
+
+		if [[ $laravel_version == "10.*" ]]; then
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/separate_domain_laravel10_index.php" "$project_route/public/index.php"
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/htaccess_laravel10.txt" "$project_route/public/.htaccess"
+		elif [[ "$laravel_version" == "11.*" ]]; then
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/separate_domain_laravel11_index.php" "$project_route/public/index.php"
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/htaccess_laravel11.txt" "$project_route/public/.htaccess"
+		elif [[ "$laravel_version" == "12.*" ]]; then
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/separate_domain_laravel12_index.php" "$project_route/public/index.php"
+			cp "$route/Pete/vendor/peteconsuegra/wordpress-plus-laravel-plugin/src/templates/htaccess_laravel12.txt" "$project_route/public/.htaccess"
+		fi
+
+	fi
 	
 fi
 

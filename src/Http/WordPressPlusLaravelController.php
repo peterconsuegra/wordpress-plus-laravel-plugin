@@ -99,24 +99,24 @@ class WordPressPlusLaravelController extends Controller
     /**
      * Create/import a new integration.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
-        $user         = Auth::user();
-        $peteOptions  = app(PeteOption::class);
-        $fields       = $request->all();
+        $user        = Auth::user();
+        $peteOptions = app(PeteOption::class);
+        $fields      = $request->all();
 
-        $site                          = new Site();
-        $site->output                  = '';
-        $site->user_id                 = (int) $user->id;
-        $site->app_name                = 'WordPress+Laravel';
-        $site->action_name             = (string) $request->input('action_name');
-        $site->laravel_version         = (string) $request->input('selected_version');
-        $site->wordpress_laravel_target_id   = $request->input('wordpress_laravel_target');
-        $site->wordpress_laravel_git_branch  = $request->input('wordpress_laravel_git_branch');
-        $site->wordpress_laravel_git         = $request->input('wordpress_laravel_git');
-        $site->wordpress_laravel_name        = (string) $request->input('wordpress_laravel_name');
-        $site->name                           = $site->wordpress_laravel_name;
-        $site->integration_type               = (string) $request->input('integration_type');
+        $site                                   = new Site();
+        $site->output                           = '';
+        $site->user_id                          = (int) $user->id;
+        $site->app_name                         = 'WordPress+Laravel';
+        $site->action_name                      = (string) $request->input('action_name');
+        $site->laravel_version                  = (string) $request->input('selected_version');
+        $site->wordpress_laravel_target_id      = $request->input('wordpress_laravel_target');
+        $site->wordpress_laravel_git_branch     = $request->input('wordpress_laravel_git_branch');
+        $site->wordpress_laravel_git            = $request->input('wordpress_laravel_git');
+        $site->wordpress_laravel_name           = (string) $request->input('wordpress_laravel_name');
+        $site->name                              = $site->wordpress_laravel_name;
+        $site->integration_type                  = (string) $request->input('integration_type');
 
         if (isset($site->wordpress_laravel_target_id)) {
             // Expecting model method provided by the package:
@@ -124,37 +124,45 @@ class WordPressPlusLaravelController extends Controller
         }
 
         // Enrich fields for validation rules that need "url" and normalized "name"
-        $fields['url']            = $site->url ?? null;
-        $fields['name']           = $site->name;
+        $fields['url']             = $site->url ?? null;
+        $fields['name']            = $site->name;
         $fields['laravel_version'] = $site->laravel_version;
+
+        // Helper for consistent JSON-or-redirect responses
+        $fail = function (array $errors, string $message = 'Validation failed.', int $status = 422) use ($request) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'error'   => true,
+                    'message' => $message,
+                    'errors'  => $errors,
+                ], $status);
+            }
+
+            // Fallback: legacy redirect with flashes
+            return redirect()
+                ->route('wpl.create')
+                ->withErrors($errors)
+                ->withInput();
+        };
 
         // PHP version checks for selected Laravel version (only relevant for "new")
         if ($site->action_name === 'new_wordpress_laravel') {
             [$phpMajor, $phpMinor] = $this->phpVersionParts();
 
             if ($site->laravel_version === '10.*' && ($phpMajor < 8 || ($phpMajor === 8 && $phpMinor < 1))) {
-                return redirect()
-                    ->route('wpl.create')
-                    ->withErrors('Unable to create WordPress + Laravel 10 integration: PHP 8.1+ is required.')
-                    ->withInput();
+                return $fail(['laravel_version' => ['PHP 8.1+ is required for Laravel 10.*']], 'Environment requirement not met.');
             }
 
             if (($site->laravel_version === '11.*' || $site->laravel_version === '12.*')
                 && ($phpMajor < 8 || ($phpMajor === 8 && $phpMinor < 2))) {
-                return redirect()
-                    ->route('wpl.create')
-                    ->withErrors('Unable to create WordPress + Laravel 11/12 integration: PHP 8.2+ is required.')
-                    ->withInput();
+                return $fail(['laravel_version' => ['PHP 8.2+ is required for Laravel 11/12.*']], 'Environment requirement not met.');
             }
         }
 
         // "inside_wordpress" safety checks
         if ($site->integration_type === 'inside_wordpress') {
             if (\in_array($site->action_name, self::FORBIDDEN_NAMES, true)) {
-                return redirect()
-                    ->route('wpl.create')
-                    ->withErrors('Forbidden project name.')
-                    ->withInput();
+                return $fail(['wordpress_laravel_name' => ['Forbidden project name.']], 'Invalid project name.');
             }
         }
 
@@ -162,45 +170,55 @@ class WordPressPlusLaravelController extends Controller
         $rules = [];
         if ($site->action_name === 'new_wordpress_laravel') {
             $rules = [
-                'name'                   => ['required', "regex:" . self::NAME_REGEX, 'unique:sites'],
-                'wordpress_laravel_name' => ['required', "regex:" . self::NAME_REGEX],
-                'integration_type'       => ['required'],
-                'wordpress_laravel_target' => ['required'],
-                'laravel_version'        => ['required'],
-                'url'                    => ['required', 'unique:sites'],
+                'name'                      => ['required', "regex:" . self::NAME_REGEX, 'unique:sites,name'],
+                'wordpress_laravel_name'    => ['required', "regex:" . self::NAME_REGEX],
+                'integration_type'          => ['required'],
+                'wordpress_laravel_target'  => ['required'],
+                'laravel_version'           => ['required'],
+                'url'                       => ['required', 'unique:sites,url'],
             ];
         } elseif ($site->action_name === 'import_wordpress_laravel') {
             $rules = [
-                'name'                         => ['required', "regex:" . self::NAME_REGEX, 'unique:sites'],
+                'name'                         => ['required', "regex:" . self::NAME_REGEX, 'unique:sites,name'],
                 'wordpress_laravel_git'        => ['required', 'string'],
                 'integration_type'             => ['required'],
                 'wordpress_laravel_git_branch' => ['required', 'string'],
                 'wordpress_laravel_name'       => ['required', "regex:" . self::NAME_REGEX],
                 'wordpress_laravel_target'     => ['required'],
-                'url'                          => ['required', 'unique:sites'],
-                'laravel_version'        => ['required']
+                'url'                          => ['required', 'unique:sites,url'],
+                'laravel_version'              => ['required'],
             ];
+        } else {
+            // Unknown or empty action
+            return $fail(['action_name' => ['Please select a valid action.']], 'Invalid action.');
         }
 
         $validator = Validator::make($fields, $rules);
 
         if ($validator->fails()) {
             Log::info('wordpressLaravel validation failed', ['errors' => $validator->errors()->all()]);
-
-            if (\in_array($site->action_name, ['new_wordpress_laravel', 'import_wordpress_laravel'], true)) {
-                return redirect()
-                    ->route('wpl.create')
-                    ->withErrors($validator)
-                    ->withInput();
-            }
+            return $fail($validator->errors()->toArray());
         }
 
         // Provisioning
         $site->create_wordpress_laravel();
         OServer::reload_server();
 
+        // Success payload (JSON), with a convenience redirect URL for clients that want it
+        $successPayload = [
+            'ok'       => true,
+            'site_id'  => $site->id,
+            'redirect' => route('wpl.logs', ['id' => $site->id]),
+        ];
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json($successPayload, 201);
+        }
+
+        // Fallback: legacy redirect to logs
         return redirect()->route('wpl.logs', ['id' => $site->id]);
     }
+
 
     /**
      * Show integration logs (web server access/error for this site).
