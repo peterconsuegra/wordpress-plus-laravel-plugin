@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="panel-heading d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0 fs-5">My WordPress ↔ Laravel Syncs</h3>
+                    <h3 id="my_wordpress_laravel_title" class="mb-0 fs-5">My WordPress ↔ Laravel Syncs</h3>
 
                     <div class="d-flex align-items-center gap-2">
                         {{-- Per-page selector (server-driven pagination UI) --}}
@@ -152,6 +152,7 @@
 
                                         <!-- Delete -->
                                         <button type="button"
+                                                :id="`delete_${site.name}`"
                                                 class="btn btn-danger"
                                                 :disabled="deletingId === site.id"
                                                 @click="confirmDelete(site)">

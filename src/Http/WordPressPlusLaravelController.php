@@ -178,6 +178,7 @@ class WordPressPlusLaravelController extends Controller
                 'wordpress_laravel_name'       => ['required', "regex:" . self::NAME_REGEX],
                 'wordpress_laravel_target'     => ['required'],
                 'url'                          => ['required', 'unique:sites'],
+                'laravel_version'        => ['required']
             ];
         }
 
@@ -264,7 +265,9 @@ class WordPressPlusLaravelController extends Controller
 			abort(403, 'You are not authorized to manage this site.');
 		}
 
+        $site->delete_wordpress_laravel();
         $site->delete();
+
         OServer::reload_server();
 
         return redirect()->route('wpl.index');
