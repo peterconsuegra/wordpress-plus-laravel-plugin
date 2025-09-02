@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Pete\WordPressPlusLaravel\Models\Site;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Gate;
-
+use Illuminate\Http\JsonResponse;
 /**
  * Controller for WordPress ↔ Laravel integrations (WordPress Plus Laravel).
  */
@@ -99,12 +99,12 @@ class WordPressPlusLaravelController extends Controller
     /**
      * Create/import a new integration.
      */
-    public function store(Request $request): RedirectResponse|\Illuminate\Http\JsonResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $user        = Auth::user();
         $peteOptions = app(PeteOption::class);
-        $fields      = $request->all();
 
+        // Build the Site model up-front (same as before)
         $site                                   = new Site();
         $site->output                           = '';
         $site->user_id                          = (int) $user->id;
@@ -115,63 +115,66 @@ class WordPressPlusLaravelController extends Controller
         $site->wordpress_laravel_git_branch     = $request->input('wordpress_laravel_git_branch');
         $site->wordpress_laravel_git            = $request->input('wordpress_laravel_git');
         $site->wordpress_laravel_name           = (string) $request->input('wordpress_laravel_name');
-        $site->name                              = $site->wordpress_laravel_name;
-        $site->integration_type                  = (string) $request->input('integration_type');
+        $site->name                             = $site->wordpress_laravel_name;
+        $site->integration_type                 = (string) $request->input('integration_type');
 
         if (isset($site->wordpress_laravel_target_id)) {
-            // Expecting model method provided by the package:
+            // Provided by the package:
             $site->set_wordpress_laravel_url($site->wordpress_laravel_target_id);
         }
 
-        // Enrich fields for validation rules that need "url" and normalized "name"
-        $fields['url']             = $site->url ?? null;
-        $fields['name']            = $site->name;
-        $fields['laravel_version'] = $site->laravel_version;
+        // Enrich input for validation rules that need these fields
+        $fields = array_replace($request->all(), [
+            'url'             => $site->url ?? null,
+            'name'            => $site->name,
+            'laravel_version' => $site->laravel_version,
+        ]);
 
-        // Helper for consistent JSON-or-redirect responses
-        $fail = function (array $errors, string $message = 'Validation failed.', int $status = 422) use ($request) {
-            if ($request->expectsJson() || $request->ajax()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $message,
-                    'errors'  => $errors,
-                ], $status);
-            }
+        // ---------- Preconditions & early guards (use PeteService::fail like SiteController) ----------
 
-            // Fallback: legacy redirect with flashes
-            return redirect()
-                ->route('wpl.create')
-                ->withErrors($errors)
-                ->withInput();
-        };
-
-        // PHP version checks for selected Laravel version (only relevant for "new")
+        // PHP version checks (only relevant for "new")
         if ($site->action_name === 'new_wordpress_laravel') {
-            [$phpMajor, $phpMinor] = $this->phpVersionParts();
+            [$phpMajor, $phpMinor] = (function (): array {
+                $parts = explode('.', \phpversion() ?: '0.0.0');
+                return [(int)($parts[0] ?? 0), (int)($parts[1] ?? 0)];
+            })();
 
             if ($site->laravel_version === '10.*' && ($phpMajor < 8 || ($phpMajor === 8 && $phpMinor < 1))) {
-                return $fail(['laravel_version' => ['PHP 8.1+ is required for Laravel 10.*']], 'Environment requirement not met.');
+                return $this->pete->fail(
+                    $request,
+                    'Environment requirement not met.',
+                    ['laravel_version' => ['PHP 8.1+ is required for Laravel 10.*']]
+                );
             }
 
-            if (($site->laravel_version === '11.*' || $site->laravel_version === '12.*')
+            if (in_array($site->laravel_version, ['11.*','12.*'], true)
                 && ($phpMajor < 8 || ($phpMajor === 8 && $phpMinor < 2))) {
-                return $fail(['laravel_version' => ['PHP 8.2+ is required for Laravel 11/12.*']], 'Environment requirement not met.');
+                return $this->pete->fail(
+                    $request,
+                    'Environment requirement not met.',
+                    ['laravel_version' => ['PHP 8.2+ is required for Laravel 11/12.*']]
+                );
             }
         }
 
-        // "inside_wordpress" safety checks
+        // "inside_wordpress" forbidden names
         if ($site->integration_type === 'inside_wordpress') {
-            if (\in_array($site->action_name, self::FORBIDDEN_NAMES, true)) {
-                return $fail(['wordpress_laravel_name' => ['Forbidden project name.']], 'Invalid project name.');
+            if (in_array($site->action_name, self::FORBIDDEN_NAMES, true)) {
+                return $this->pete->fail(
+                    $request,
+                    'Invalid project name.',
+                    ['wordpress_laravel_name' => ['Forbidden project name.']]
+                );
             }
         }
 
-        // Validation rules depend on action
+        // ---------- Validation (no auto redirects; JSON for XHR) ----------
+
         $rules = [];
         if ($site->action_name === 'new_wordpress_laravel') {
             $rules = [
-                'name'                      => ['required', "regex:" . self::NAME_REGEX, 'unique:sites,name'],
-                'wordpress_laravel_name'    => ['required', "regex:" . self::NAME_REGEX],
+                'name'                      => ['required', 'regex:' . self::NAME_REGEX, 'unique:sites,name'],
+                'wordpress_laravel_name'    => ['required', 'regex:' . self::NAME_REGEX],
                 'integration_type'          => ['required'],
                 'wordpress_laravel_target'  => ['required'],
                 'laravel_version'           => ['required'],
@@ -179,44 +182,62 @@ class WordPressPlusLaravelController extends Controller
             ];
         } elseif ($site->action_name === 'import_wordpress_laravel') {
             $rules = [
-                'name'                         => ['required', "regex:" . self::NAME_REGEX, 'unique:sites,name'],
+                'name'                         => ['required', 'regex:' . self::NAME_REGEX, 'unique:sites,name'],
                 'wordpress_laravel_git'        => ['required', 'string'],
                 'integration_type'             => ['required'],
                 'wordpress_laravel_git_branch' => ['required', 'string'],
-                'wordpress_laravel_name'       => ['required', "regex:" . self::NAME_REGEX],
+                'wordpress_laravel_name'       => ['required', 'regex:' . self::NAME_REGEX],
                 'wordpress_laravel_target'     => ['required'],
                 'url'                          => ['required', 'unique:sites,url'],
                 'laravel_version'              => ['required'],
             ];
         } else {
-            // Unknown or empty action
-            return $fail(['action_name' => ['Please select a valid action.']], 'Invalid action.');
+            // Unknown / empty action
+            return $this->pete->fail(
+                $request,
+                'Invalid action.',
+                ['action_name' => ['Please select a valid action.']]
+            );
         }
 
-        $validator = Validator::make($fields, $rules);
+        $validator = \Validator::make($fields, $rules);
 
         if ($validator->fails()) {
-            Log::info('wordpressLaravel validation failed', ['errors' => $validator->errors()->all()]);
-            return $fail($validator->errors()->toArray());
+            \Log::info('wordpressLaravel validation failed', ['errors' => $validator->errors()->all()]);
+            return $this->pete->fail($request, 'Validation failed.', $validator->errors()->toArray(), 422);
         }
 
-        // Provisioning
-        $site->create_wordpress_laravel();
-        OServer::reload_server();
+        // ---------- Provisioning (guarded) ----------
 
-        // Success payload (JSON), with a convenience redirect URL for clients that want it
-        $successPayload = [
-            'ok'       => true,
-            'site_id'  => $site->id,
-            'redirect' => route('wpl.logs', ['id' => $site->id]),
-        ];
+        try {
+            $site->create_wordpress_laravel();
+            OServer::reload_server();
 
-        if ($request->expectsJson() || $request->ajax()) {
-            return response()->json($successPayload, 201);
+            $payload = [
+                'error'    => false,
+                'message'  => 'Integration created successfully.',
+                'site_id'  => $site->id,
+                'redirect' => route('wpl.logs', ['id' => $site->id]),
+            ];
+
+            return ($request->expectsJson() || $request->ajax())
+                ? response()->json($payload, 201)
+                : redirect()->route('wpl.logs', ['id' => $site->id])->with('status', $payload['message']);
+
+        } catch (\Throwable $e) {
+            \Log::error('WordPress+Laravel creation failed', [
+                'exception' => $e,
+                'user_id'   => Auth::id(),
+            ]);
+
+            // Match SiteController::store: JSON 500 for XHR, otherwise back with errors
+            return ($request->expectsJson() || $request->ajax())
+                ? response()->json([
+                    'error'   => true,
+                    'message' => 'Failed to create integration. Please try again.',
+                ], 500)
+                : back()->withInput()->withErrors('Failed to create integration. Please try again.');
         }
-
-        // Fallback: legacy redirect to logs
-        return redirect()->route('wpl.logs', ['id' => $site->id]);
     }
 
 
