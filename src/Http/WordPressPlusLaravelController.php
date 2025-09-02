@@ -200,12 +200,19 @@ class WordPressPlusLaravelController extends Controller
             );
         }
 
-        $validator = \Validator::make($fields, $rules);
+        $validator = Validator::make($fields, $rules);
 
         if ($validator->fails()) {
-            \Log::info('wordpressLaravel validation failed', ['errors' => $validator->errors()->all()]);
+            Log::info('wordpressLaravel validation failed', ['errors' => $validator->errors()->all()]);
             return $this->pete->fail($request, 'Validation failed.', $validator->errors()->toArray(), 422);
         }
+
+        // Domain/business guards, return field-specific errors
+		if ($this->pete->isTheURLForbidden($site->url)) {
+			return $this->pete->fail($request, 'URL forbidden.', [
+				'url' => ['This URL is not allowed.'],
+			], 422);
+		}
 
         // ---------- Provisioning (guarded) ----------
 
